@@ -1,0 +1,1 @@
+# manus.forex-assist
