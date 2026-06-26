@@ -5835,5 +5835,239 @@ Seria um capítulo registrando por que determinadas decisões foram tomadas (por
 Na minha opinião, esse seria o passo final para colocar a documentação do Forex Assist em um padrão equivalente ao de projetos profissionais bem documentados.
 --
 
+AUDITORIA TÉCNICA 11
+--
+DECISÕES ARQUITETURAIS PERMANENTES
+
+Este capítulo registra as principais decisões arquiteturais do Forex Assist e os motivos que levaram à sua adoção.
+
+Seu objetivo é preservar o raciocínio técnico por trás da arquitetura, evitando que decisões consolidadas sejam revistas sem necessidade.
+
+Estas decisões passam a representar princípios permanentes do projeto.
+
+---
+
+DECISÃO 001
+
+Separação entre Interface e Engine
+
+Decisão
+
+Separar completamente a Interface da lógica operacional.
+
+Motivação
+
+As primeiras versões concentravam toda a lógica em poucos arquivos.
+
+Isso dificultava manutenção, testes e evolução.
+
+Resultado
+
+A Interface passou a ser responsável apenas pela interação com o usuário.
+
+Toda regra de negócio passou a pertencer à Engine.
+
+Benefícios
+
+- Redução do acoplamento.
+- Melhor organização.
+- Facilidade de testes.
+- Evolução independente.
+
+---
+
+DECISÃO 002
+
+Scanner e Expert possuem responsabilidades diferentes
+
+Decisão
+
+Não permitir que o Scanner execute funções do Expert.
+
+Motivação
+
+Misturar geração de sinais com inteligência histórica aumentaria a complexidade e dificultaria a manutenção.
+
+Resultado
+
+Scanner
+
+↓
+
+Encontra oportunidades.
+
+Expert
+
+↓
+
+Interpreta oportunidades.
+
+Benefícios
+
+Arquitetura limpa.
+
+Responsabilidades únicas.
+
+Facilidade de evolução.
+
+---
+
+DECISÃO 003
+
+Persistência centralizada
+
+Decisão
+
+Toda comunicação com Firestore deve ocorrer através da camada oficial de persistência.
+
+Motivação
+
+Evitar múltiplos pontos de acesso ao banco.
+
+Resultado
+
+Centralização.
+
+Maior controle.
+
+Maior segurança.
+
+Menor acoplamento.
+
+---
+
+DECISÃO 004
+
+MarketData como única porta de entrada para dados externos
+
+Decisão
+
+Nenhum módulo consulta diretamente provedores de mercado.
+
+Motivação
+
+Facilitar substituição de APIs e padronização dos dados.
+
+Benefícios
+
+Troca simples de provedores.
+
+Código reutilizável.
+
+Redução de dependências.
+
+---
+
+DECISÃO 005
+
+Histórico imutável
+
+Decisão
+
+Toda operação registrada representa um fato histórico.
+
+Motivação
+
+Permitir auditorias, estatísticas e aprendizado confiáveis.
+
+Resultado
+
+O Histórico nunca deve ser reescrito para alterar fatos já registrados.
+
+Apenas complementado quando necessário.
+
+---
+
+DECISÃO 006
+
+Arquitetura modular permanente
+
+Decisão
+
+Toda nova funcionalidade deve respeitar a arquitetura modular.
+
+Motivação
+
+O crescimento do projeto demonstrou que a modularização reduz regressões e facilita manutenção.
+
+Resultado
+
+Nenhuma funcionalidade deverá justificar retorno à arquitetura monolítica.
+
+---
+
+DECISÃO 007
+
+Documentação como parte do desenvolvimento
+
+Decisão
+
+Documento Mestre e Worklog passam a fazer parte da engenharia do projeto.
+
+Motivação
+
+Evitar perda de conhecimento entre versões e conversas.
+
+Resultado
+
+Toda evolução relevante deverá ser documentada.
+
+A documentação deixa de ser opcional e passa a integrar o ciclo oficial de desenvolvimento.
+
+---
+
+DECISÃO 008
+
+Código-fonte como referência técnica
+
+Decisão
+
+Em caso de divergência entre documentação e implementação, o código-fonte representa a verdade técnica.
+
+Motivação
+
+A documentação deve refletir o sistema existente.
+
+Resultado
+
+Sempre que houver divergência, a documentação deverá ser atualizada para representar fielmente a implementação.
+
+---
+
+DECISÃO 009
+
+Preservação da arquitetura acima da velocidade
+
+Decisão
+
+Nenhuma funcionalidade deverá comprometer a arquitetura para acelerar o desenvolvimento.
+
+Motivação
+
+Projetos de longa duração exigem estabilidade estrutural.
+
+Resultado
+
+A evolução do Forex Assist prioriza manutenção, clareza e previsibilidade em vez de crescimento acelerado.
+
+---
+
+PRINCÍPIO FINAL
+
+Toda decisão arquitetural futura deverá registrar:
+
+- O problema identificado.
+- A decisão tomada.
+- A motivação técnica.
+- Os benefícios esperados.
+- Os impactos conhecidos.
+
+Essas decisões passam a integrar permanentemente a memória técnica do Forex Assist.
+
+Minha avaliação
+Depois dessa parte, considero que o Documento Mestre deixa de ser apenas um documento de projeto e passa a ser um Manual Oficial de Arquitetura, Engenharia e Governança.
+Na minha opinião, este foi o complemento que mais agregou valor à documentação, porque preserva não apenas a estrutura do sistema, mas também o raciocínio que levou às decisões técnicas. Isso tende a evitar retrabalho e mudanças que enfraqueçam a arquitetura nas próximas versões.
+--
+
 
 
