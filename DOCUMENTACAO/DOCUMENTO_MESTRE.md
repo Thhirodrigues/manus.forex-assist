@@ -3073,8 +3073,9 @@ Objetivo Final
 
 Concluir o Forex Assist dentro do prazo estabelecido, reduzindo retrabalho e mantendo uma linha contínua de desenvolvimento.
 ---
-AUDITORIA TÉCNICA 26/06/26
 
+
+AUDITORIA TÉCNICA 1 26/06/26
 ---
 
 ARQUITETURA FÍSICA DO REPOSITÓRIO
@@ -3213,6 +3214,1382 @@ A Interface nunca deve implementar regras de negócio.
 Toda inteligência do sistema deve permanecer concentrada na Engine.
 
 A Interface apenas apresenta informações e encaminha ações ao núcleo operacional.
+
+Resultado da auditoria
+Já consegui confirmar que o projeto deixou de ser um sistema monolítico. Hoje ele possui uma arquitetura em camadas bem definida, mas essa evolução ainda não está documentada de forma explícita.
+Na próxima entrega vou montar o Inventário Oficial dos Arquivos, onde cada arquivo terá sua ficha técnica (responsabilidade, dependências, criticidade e estado), no mesmo padrão do Documento Mestre. Esse inventário será a base para manter a documentação sincronizada com o código daqui para frente.
 ---
+
+AUDITORIA TÉCNICA 2
+--
+INVENTÁRIO OFICIAL DOS MÓDULOS
+
+Após a auditoria do repositório foi definido que cada arquivo possui uma responsabilidade única dentro da arquitetura do Forex Assist.
+
+A documentação oficial passa a reconhecer os seguintes módulos.
+
+---
+
+index.html
+
+Responsabilidade
+
+Ponto de entrada da aplicação.
+
+Funções
+
+- Inicializar a Interface.
+- Carregar CSS.
+- Carregar módulos JavaScript.
+- Construir a estrutura principal da aplicação.
+
+Criticidade
+
+★★★★★
+
+Dependências
+
+- css/styles.css
+- js/
+
+Status
+
+Produção.
+
+---
+
+app.js
+
+Responsabilidade
+
+Controlador principal da Interface.
+
+Funções
+
+- Inicialização da aplicação.
+- Controle das telas.
+- Navegação.
+- Eventos da Interface.
+- Comunicação entre os módulos visuais.
+
+Criticidade
+
+★★★★★
+
+Camada
+
+Interface.
+
+Status
+
+Produção.
+
+Observação
+
+Não deve conter regras de negócio.
+
+Toda inteligência deve permanecer na Engine.
+
+---
+
+scanner.js (Interface)
+
+Responsabilidade
+
+Ponte entre Interface e Scanner.
+
+Funções
+
+- Receber comandos da Interface.
+- Atualizar elementos visuais.
+- Encaminhar solicitações ao Scanner principal.
+
+Criticidade
+
+★★★★★
+
+Camada
+
+Interface.
+
+Status
+
+Produção.
+
+Observação
+
+Não executa análises de mercado.
+
+---
+
+checker.js
+
+Responsabilidade
+
+Gerenciar a atualização visual dos resultados das operações.
+
+Funções
+
+- Consultar operações pendentes.
+- Atualizar estados.
+- Sincronizar Interface e banco de dados.
+
+Criticidade
+
+★★★★★
+
+Camada
+
+Interface.
+
+Status
+
+Produção.
+
+---
+
+historico.js
+
+Responsabilidade
+
+Gerenciar toda a apresentação do Histórico.
+
+Funções
+
+- Carregar operações.
+- Agrupar por datas.
+- Atualizar cartões.
+- Calcular indicadores exibidos.
+- Controlar expansão dos grupos.
+
+Criticidade
+
+★★★★★
+
+Camada
+
+Interface.
+
+Status
+
+Produção.
+
+Observação
+
+Representa um dos módulos mais importantes da Interface.
+
+---
+
+expert.js
+
+Responsabilidade
+
+Interface do Expert.
+
+Funções
+
+- Exibir informações produzidas pelo Expert.
+- Apresentar recomendações.
+- Exibir análises ao operador.
+
+Criticidade
+
+★★★★☆
+
+Camada
+
+Interface.
+
+Status
+
+Em evolução.
+
+Observação
+
+A inteligência permanece em expertLogic.js.
+
+---
+
+manual.js
+
+Responsabilidade
+
+Centralizar informações de ajuda ao usuário.
+
+Funções
+
+- Manual.
+- Instruções.
+- Guias.
+
+Criticidade
+
+★★☆☆☆
+
+Camada
+
+Interface.
+
+Status
+
+Produção.
+
+---
+
+config.js
+
+Responsabilidade
+
+Centralizar parâmetros globais utilizados pela Interface.
+
+Funções
+
+- Configurações.
+- Constantes.
+- Valores padrão.
+
+Criticidade
+
+★★★★☆
+
+Camada
+
+Interface.
+
+Status
+
+Produção.
+
+---
+
+push.js
+
+Responsabilidade
+
+Gerenciar notificações Push.
+
+Funções
+
+- Registro.
+- Recebimento.
+- Atualização de notificações.
+
+Criticidade
+
+★★★☆☆
+
+Camada
+
+Infraestrutura.
+
+Status
+
+Produção.
+
+---
+
+firebase-config.js
+
+Responsabilidade
+
+Inicializar a comunicação da Interface com o Firebase.
+
+Funções
+
+- Inicialização.
+- Conexão.
+- Configuração.
+
+Criticidade
+
+★★★★★
+
+Camada
+
+Infraestrutura.
+
+Status
+
+Produção.
+
+Observação
+
+Não deve conter regras de negócio.
+
+Resultado da auditoria
+Já foi possível identificar uma decisão arquitetural importante que merece entrar na documentação:
+O projeto separa claramente "Interface" e "Engine".
+Os arquivos da pasta js não são o núcleo do sistema. Eles atuam principalmente como controladores da interface e da experiência do usuário. A lógica operacional deve permanecer concentrada na pasta scripts.
+Essa distinção reforça a arquitetura modular e explica por que existem arquivos com nomes semelhantes em camadas diferentes, como scanner.js na Interface e scanner.js na Engine. Ela deve ser preservada como um princípio oficial do projeto.
+Na próxima entrega vou documentar a Engine (scripts/), que concentra a inteligência operacional do Forex Assist. Essa parte é o núcleo do sistema e merece um capítulo próprio no Documento Mestre.
+---
+
+AUDITORIA TÉCNICA 3
+---
+INVENTÁRIO OFICIAL DA ENGINE
+
+A pasta scripts/ concentra o núcleo operacional do Forex Assist.
+
+Todos os algoritmos de decisão, análise de mercado e processamento devem permanecer nesta camada.
+
+A Interface apenas solicita operações e apresenta os resultados.
+
+---
+
+scanner.js (Engine)
+
+Responsabilidade
+
+Motor principal do Scanner.
+
+Funções
+
+- Executar ciclos de análise.
+- Percorrer os pares monitorados.
+- Solicitar dados de mercado.
+- Acionar os módulos de análise.
+- Validar critérios mínimos.
+- Registrar operações aprovadas.
+
+Criticidade
+
+★★★★★
+
+Camada
+
+Engine.
+
+Status
+
+Produção.
+
+Observação
+
+Representa o núcleo operacional do Scanner.
+
+Nenhum processamento de mercado deve permanecer na Interface.
+
+---
+
+marketData.js
+
+Responsabilidade
+
+Camada de aquisição de dados.
+
+Funções
+
+- Consultar provedores externos.
+- Normalizar preços.
+- Padronizar candles.
+- Entregar dados consistentes aos módulos superiores.
+
+Criticidade
+
+★★★★★
+
+Camada
+
+Engine.
+
+Status
+
+Produção.
+
+Observação
+
+Toda comunicação direta com provedores de dados deve passar por este módulo.
+
+---
+
+marketAnalyzer.js
+
+Responsabilidade
+
+Interpretar os dados do mercado.
+
+Funções
+
+- Avaliar tendência.
+- Avaliar força do movimento.
+- Identificar condições de mercado.
+- Produzir métricas utilizadas pelo Scanner.
+
+Criticidade
+
+★★★★★
+
+Camada
+
+Engine.
+
+Status
+
+Produção.
+
+Observação
+
+Não realiza consultas externas.
+
+Utiliza exclusivamente os dados recebidos do módulo MarketData.
+
+---
+
+pairAnalyzer.js
+
+Responsabilidade
+
+Executar análises específicas para cada ativo.
+
+Funções
+
+- Avaliar individualmente cada par de moedas.
+- Aplicar regras específicas.
+- Produzir resultados para o Scanner.
+
+Criticidade
+
+★★★★★
+
+Camada
+
+Engine.
+
+Status
+
+Produção.
+
+Observação
+
+Permite que diferentes ativos possuam comportamentos distintos sem alterar o Scanner principal.
+
+---
+
+riskManager.js
+
+Responsabilidade
+
+Aplicar as regras de gestão de risco.
+
+Funções
+
+- Avaliar exposição.
+- Validar critérios de segurança.
+- Apoiar decisões operacionais.
+- Preparar futuras recomendações de risco.
+
+Criticidade
+
+★★★★★
+
+Camada
+
+Engine.
+
+Status
+
+Produção.
+
+Observação
+
+Toda regra relacionada à preservação da banca deve permanecer neste módulo.
+
+---
+
+expertLogic.js
+
+Responsabilidade
+
+Núcleo lógico do Expert.
+
+Funções
+
+- Processar estatísticas.
+- Interpretar o histórico.
+- Detectar padrões.
+- Produzir recomendações.
+- Evoluir a inteligência operacional.
+
+Criticidade
+
+★★★★★
+
+Camada
+
+Engine.
+
+Status
+
+Em evolução.
+
+Observação
+
+Este módulo representa a inteligência do Forex Assist.
+
+A Interface apenas apresenta seus resultados.
+
+---
+
+firebase.js
+
+Responsabilidade
+
+Centralizar o acesso da Engine ao Firebase.
+
+Funções
+
+- Comunicação com Firestore.
+- Persistência.
+- Atualizações.
+- Leitura de registros.
+
+Criticidade
+
+★★★★★
+
+Camada
+
+Infraestrutura.
+
+Status
+
+Produção.
+
+Observação
+
+Nenhum módulo da Engine deve acessar diretamente o Firestore sem utilizar esta camada.
+
+---
+
+utils.js
+
+Responsabilidade
+
+Biblioteca de funções utilitárias.
+
+Funções
+
+- Conversões.
+- Funções compartilhadas.
+- Processamentos auxiliares.
+- Padronizações.
+
+Criticidade
+
+★★★☆☆
+
+Camada
+
+Engine.
+
+Status
+
+Produção.
+
+Observação
+
+Deve conter apenas funções reutilizáveis, sem regras específicas de negócio.
+
+---
+
+PRINCÍPIO DA ENGINE
+
+A pasta scripts/ representa o núcleo operacional do Forex Assist.
+
+Todo algoritmo responsável por:
+
+- analisar o mercado;
+- calcular indicadores;
+- interpretar resultados;
+- aplicar gestão de risco;
+- produzir inteligência;
+
+deve permanecer nesta camada.
+
+A Interface jamais deverá duplicar essa lógica.
+
+Essa separação reduz acoplamento, facilita testes, preserva a arquitetura modular e permite a evolução independente da Interface e da Engine.
+
+Resultado da Auditoria
+Esta etapa revelou uma decisão arquitetural muito importante:
+O projeto já está organizado segundo um modelo semelhante ao de sistemas profissionais, com responsabilidades distribuídas em camadas:
+Plain text
+Interface (js)
+        │
+        ▼
+Engine (scripts)
+        │
+        ▼
+Infraestrutura (Firebase / APIs)
+        │
+        ▼
+Serviços Externos (Firestore / TwelveData)
+Essa organização não estava formalizada na documentação. Ao adicioná-la ao Documento Mestre, a arquitetura deixa de ser apenas uma implementação do código e passa a ser uma regra oficial de engenharia, orientando todas as futuras evoluções do Forex Assist.
+---
+
+AUDITORIA TÉCNICA 4
+---
+FLUXO OFICIAL DE EXECUÇÃO DO FOREX ASSIST
+
+Após a auditoria da arquitetura, foi possível reconstruir o fluxo operacional completo do Forex Assist.
+
+Este fluxo representa o comportamento esperado do sistema e deve servir como referência para qualquer evolução futura.
+
+---
+
+Fluxo Principal
+
+Operador
+
+↓
+
+Interface (index.html)
+
+↓
+
+app.js
+
+↓
+
+scanner.js (Interface)
+
+↓
+
+scanner.js (Engine)
+
+↓
+
+marketData.js
+
+↓
+
+marketAnalyzer.js
+
+↓
+
+pairAnalyzer.js
+
+↓
+
+riskManager.js
+
+↓
+
+Validação da Operação
+
+↓
+
+firebase.js
+
+↓
+
+Firestore
+
+↓
+
+Histórico
+
+↓
+
+Result Checker
+
+↓
+
+Atualização da Operação
+
+↓
+
+Expert
+
+↓
+
+Interface
+
+---
+
+Etapa 1 — Inicialização
+
+Responsável:
+
+- index.html
+- app.js
+
+Função:
+
+Inicializar toda a aplicação.
+
+Carregar módulos.
+
+Preparar a Interface.
+
+Estabelecer conexão com Firebase.
+
+---
+
+Etapa 2 — Solicitação de Análise
+
+Responsável:
+
+scanner.js (Interface)
+
+Função:
+
+Receber o comando do operador ou da automação.
+
+Encaminhar a solicitação para a Engine.
+
+Nenhuma análise é realizada nesta etapa.
+
+---
+
+Etapa 3 — Análise de Mercado
+
+Responsável:
+
+scanner.js (Engine)
+
+Função:
+
+Coordenar toda a análise.
+
+Solicitar dados.
+
+Executar os módulos especializados.
+
+Tomar a decisão final sobre a geração do sinal.
+
+---
+
+Etapa 4 — Coleta de Dados
+
+Responsável:
+
+marketData.js
+
+Função:
+
+Consultar o provedor de dados.
+
+Padronizar informações.
+
+Disponibilizar candles e preços para os demais módulos.
+
+---
+
+Etapa 5 — Análise Técnica
+
+Responsável:
+
+marketAnalyzer.js
+
+Função:
+
+Interpretar os dados recebidos.
+
+Avaliar tendência.
+
+Avaliar força.
+
+Gerar informações para o Scanner.
+
+---
+
+Etapa 6 — Avaliação por Ativo
+
+Responsável:
+
+pairAnalyzer.js
+
+Função:
+
+Aplicar regras específicas para cada par de moedas.
+
+Permitir comportamentos diferentes entre ativos sem alterar o Scanner principal.
+
+---
+
+Etapa 7 — Gestão de Risco
+
+Responsável:
+
+riskManager.js
+
+Função:
+
+Aplicar filtros de segurança.
+
+Validar critérios mínimos.
+
+Impedir operações que contrariem as regras do projeto.
+
+---
+
+Etapa 8 — Persistência
+
+Responsável:
+
+firebase.js
+
+Função:
+
+Registrar a operação.
+
+Atualizar Firestore.
+
+Garantir integridade dos dados.
+
+---
+
+Etapa 9 — Histórico
+
+Responsável:
+
+historico.js
+
+Função:
+
+Exibir operações.
+
+Organizar por datas.
+
+Atualizar estatísticas.
+
+Permitir consultas futuras.
+
+---
+
+Etapa 10 — Result Checker
+
+Responsável:
+
+checker.js + Workflow Result Checker
+
+Função:
+
+Localizar operações pendentes.
+
+Consultar preço de fechamento.
+
+Definir WIN ou LOSS.
+
+Atualizar Firestore.
+
+Atualizar Interface.
+
+---
+
+Etapa 11 — Expert
+
+Responsável:
+
+expertLogic.js
+
+Função:
+
+Interpretar o histórico.
+
+Identificar padrões.
+
+Produzir inteligência operacional.
+
+Gerar recomendações futuras.
+
+---
+
+FLUXO DOS GITHUB ACTIONS
+
+Os workflows executam a Engine independentemente da Interface.
+
+Fluxo:
+
+GitHub Actions
+
+↓
+
+Scanner
+
+↓
+
+Engine
+
+↓
+
+Firestore
+
+↓
+
+Result Checker
+
+↓
+
+Atualização do Histórico
+
+A Interface não é necessária para que essas rotinas sejam executadas.
+
+---
+
+PRINCÍPIO DE RESPONSABILIDADE
+
+Cada etapa possui um único responsável.
+
+Nenhum módulo deve assumir responsabilidades pertencentes a outro módulo.
+
+Essa separação constitui um princípio permanente da arquitetura do Forex Assist.
+
+Qualquer evolução futura deverá preservar esse fluxo, salvo decisão técnica formalmente documentada.
+
+Resultado da auditoria
+Esta análise revelou uma característica importante do projeto:
+O Forex Assist já opera como um pipeline de processamento, em que cada módulo executa uma etapa específica e entrega o resultado para o próximo. Isso significa que a arquitetura é naturalmente escalável e facilita a inclusão de novos módulos (como análises estatísticas avançadas ou novos provedores de dados) sem alterar o restante do fluxo.
+Essa visão do pipeline não aparecia explicitamente na documentação e passa a ser um dos principais conceitos arquiteturais do projeto.
+---
+
+AUDITORIA TÉCNICA 5
+--
+---
+
+ESTADO OFICIAL DO PROJETO
+
+Após auditoria completa da arquitetura física do repositório, foi estabelecido o estado técnico oficial da V5 Expert Alpha.
+
+O objetivo desta seção é registrar a situação real do código-fonte, permitindo que qualquer desenvolvimento futuro seja iniciado sem necessidade de nova auditoria.
+
+---
+
+MÓDULOS IMPLEMENTADOS
+
+Atualmente encontram-se implementados na arquitetura do projeto:
+
+Interface
+
+- index.html
+- app.js
+- scanner.js
+- historico.js
+- checker.js
+- expert.js
+- manual.js
+- config.js
+- firebase-config.js
+- push.js
+
+Status
+
+Produção.
+
+---
+
+Engine
+
+- scanner.js
+- marketAnalyzer.js
+- marketData.js
+- pairAnalyzer.js
+- riskManager.js
+- expertLogic.js
+- firebase.js
+- utils.js
+
+Status
+
+Produção.
+
+---
+
+Infraestrutura
+
+- Firebase
+- Firestore
+- GitHub Actions
+- Service Worker
+- Firebase Messaging
+- TwelveData
+
+Status
+
+Produção.
+
+---
+
+MÓDULOS EM EVOLUÇÃO
+
+Os seguintes componentes encontram-se implementados, porém ainda representam áreas de evolução contínua.
+
+Expert
+
+Situação
+
+Implementado estruturalmente.
+
+Objetivo futuro
+
+Transformar dados históricos em inteligência operacional.
+
+---
+
+Risk Manager
+
+Situação
+
+Estrutura presente.
+
+Objetivo futuro
+
+Evoluir para gestão completa da banca.
+
+---
+
+Market Analyzer
+
+Situação
+
+Operacional.
+
+Objetivo futuro
+
+Aumentar precisão das análises.
+
+---
+
+ARQUITETURA CONSOLIDADA
+
+Durante a auditoria verificou-se que a arquitetura modular encontra-se consolidada.
+
+As responsabilidades encontram-se separadas entre:
+
+- Interface.
+- Engine.
+- Infraestrutura.
+- Automações.
+
+Essa separação representa um dos principais ativos técnicos do projeto.
+
+---
+
+GRAU DE MATURIDADE
+
+Arquitetura
+
+★★★★★
+
+Organização
+
+★★★★★
+
+Escalabilidade
+
+★★★★★
+
+Documentação
+
+★★★★☆
+
+Separação de responsabilidades
+
+★★★★★
+
+Preparação para evolução
+
+★★★★★
+
+---
+
+DÍVIDA TÉCNICA IDENTIFICADA
+
+Durante a auditoria foram identificados pontos que deverão ser revisados futuramente.
+
+Entre eles:
+
+- Confirmar necessidade da existência de módulos com nomes semelhantes em camadas distintas.
+- Revisar possíveis duplicações de responsabilidades.
+- Validar dependências entre Interface e Engine.
+- Mapear funções ainda não documentadas internamente.
+- Confirmar que não existem arquivos sem utilização.
+
+Nenhum desses pontos representa falha arquitetural.
+
+Tratam-se apenas de verificações para futuras auditorias.
+
+---
+
+CONCLUSÃO DA AUDITORIA
+
+A arquitetura encontrada no repositório demonstra que o Forex Assist deixou definitivamente de ser um projeto monolítico.
+
+O sistema encontra-se organizado em camadas independentes, com responsabilidades claramente distribuídas.
+
+A base atual permite evolução contínua sem necessidade de reestruturações profundas.
+
+A partir desta versão, toda nova funcionalidade deverá respeitar a arquitetura estabelecida nesta auditoria.
+
+Esta seção passa a representar o estado oficial da V5 Expert Alpha.
+
+Resultado da Auditoria
+Essa etapa mudou um ponto importante da documentação.
+Antes, o Documento Mestre descrevia principalmente o projeto que queríamos construir.
+Agora ele também descreve o projeto que efetivamente existe.
+Essa diferença é fundamental para manter a documentação útil ao longo do tempo.
+---
+Minha observação de arquiteto
+Depois de analisar a estrutura do repositório, minha percepção mudou.
+No início eu via o Forex Assist como um Scanner que estava crescendo.
+Hoje eu o vejo como uma plataforma.
+O Scanner é apenas um dos módulos.
+O Expert é outro.
+O Histórico é outro.
+O Firebase é outro.
+Os Workflows são outro.
+A Interface é outro.
+Isso muda completamente a forma como o projeto deve evoluir.
+Na próxima entrega, vou produzir o documento que considero o mais importante de toda a auditoria: o Mapa de Responsabilidades. Ele vai mostrar, em uma única tabela, quem é responsável por cada função do sistema, eliminando qualquer dúvida sobre onde uma alteração deve ser feita e servindo como guia permanente de engenharia.
+
+---
+AUDITORIA TÉCNICA 6
+Mapa oficial das responsabilidades.
+--
+MAPA OFICIAL DE RESPONSABILIDADES
+
+Após a auditoria da arquitetura do Forex Assist, foi definido o mapa oficial de responsabilidades do projeto.
+
+Este documento estabelece definitivamente qual módulo é responsável por cada atividade.
+
+Nenhuma responsabilidade deve existir em mais de um módulo.
+
+---
+
+INTERFACE
+
+Responsável por:
+
+- Navegação.
+- Experiência do usuário.
+- Exibição dos dados.
+- Configurações.
+- Histórico.
+- Logs.
+- Eventos da Interface.
+
+Arquivos responsáveis:
+
+- index.html
+- app.js
+- historico.js
+- checker.js
+- scanner.js (Interface)
+- expert.js
+- manual.js
+
+A Interface nunca deve:
+
+- analisar mercado;
+- calcular indicadores;
+- gerar sinais;
+- interpretar histórico;
+- executar regras de risco.
+
+---
+
+SCANNER
+
+Responsável por:
+
+- iniciar ciclos de análise;
+- solicitar dados;
+- coordenar análises;
+- validar oportunidades;
+- registrar operações.
+
+Arquivo responsável:
+
+scripts/scanner.js
+
+O Scanner nunca deve:
+
+- interpretar histórico;
+- calcular estatísticas;
+- gerar recomendações;
+- alterar resultados de operações.
+
+---
+
+MARKET DATA
+
+Responsável por:
+
+- consultar APIs;
+- obter candles;
+- obter preços;
+- normalizar dados.
+
+Arquivo responsável:
+
+scripts/marketData.js
+
+Nenhum outro módulo deve consultar diretamente provedores externos.
+
+---
+
+MARKET ANALYZER
+
+Responsável por:
+
+- tendência;
+- força do mercado;
+- leitura técnica;
+- indicadores.
+
+Arquivo responsável:
+
+scripts/marketAnalyzer.js
+
+Não realiza persistência.
+
+Não consulta Firestore.
+
+---
+
+PAIR ANALYZER
+
+Responsável por:
+
+- comportamento específico de cada ativo;
+- filtros específicos;
+- análise individual.
+
+Arquivo responsável:
+
+scripts/pairAnalyzer.js
+
+---
+
+RISK MANAGER
+
+Responsável por:
+
+- filtros de risco;
+- proteção da banca;
+- validação operacional.
+
+Arquivo responsável:
+
+scripts/riskManager.js
+
+Nenhuma regra de risco deve existir fora deste módulo.
+
+---
+
+FIREBASE
+
+Responsável por:
+
+- leitura;
+- gravação;
+- atualização;
+- comunicação com Firestore.
+
+Arquivos:
+
+- firebase.js
+- firebase-config.js
+
+Nenhum outro módulo deve manipular diretamente a persistência.
+
+---
+
+RESULT CHECKER
+
+Responsável por:
+
+- localizar operações pendentes;
+- consultar preço final;
+- calcular WIN ou LOSS;
+- atualizar Firestore;
+- atualizar Histórico.
+
+Arquivos:
+
+- checker.js
+- Workflow Result Checker
+
+---
+
+HISTÓRICO
+
+Responsável por:
+
+- organizar operações;
+- agrupar datas;
+- atualizar cartões;
+- calcular estatísticas exibidas.
+
+Arquivo:
+
+historico.js
+
+Nunca altera dados do banco.
+
+---
+
+EXPERT
+
+Responsável por:
+
+- inteligência operacional;
+- padrões;
+- recomendações;
+- estatísticas avançadas;
+- aprendizado.
+
+Arquivos:
+
+- expert.js
+- expertLogic.js
+
+---
+
+GITHUB ACTIONS
+
+Responsável por:
+
+- automação;
+- execução periódica;
+- scanner automático;
+- Result Checker.
+
+Arquivos:
+
+.github/workflows/
+
+---
+
+REGRA DE RESPONSABILIDADE ÚNICA
+
+Todo novo módulo deverá possuir apenas uma responsabilidade principal.
+
+Caso uma funcionalidade pertença claramente a outro módulo, ela deverá ser implementada naquele módulo.
+
+A duplicação de responsabilidades é considerada dívida técnica.
+
+---
+
+PRINCÍPIO DE EVOLUÇÃO
+
+Toda nova funcionalidade deverá responder duas perguntas antes de ser implementada:
+
+1. Qual módulo é responsável por esta funcionalidade?
+
+2. Existe algum módulo já responsável por essa responsabilidade?
+
+Caso exista, a funcionalidade deverá ser implementada nele, preservando a arquitetura modular do projeto.
+
+Resultado da auditoria
+Acabei de documentar uma regra que normalmente só existe em projetos grandes: a Matriz de Responsabilidades.
+Ela evita um problema muito comum: daqui a alguns meses, durante uma nova funcionalidade, não surgir a dúvida "em qual arquivo isso deve ficar?". A resposta passa a estar oficializada.
+Minha principal descoberta até agora
+Depois de cruzar o repositório com o Documento Mestre, percebi que a arquitetura do projeto está mais madura do que a documentação fazia parecer.
+Na prática, você já tem um sistema dividido em módulos especializados. O que faltava era transformar essa organização em uma regra oficial de engenharia.
+Essa parte faz exatamente isso. Ela não apenas descreve o código atual, mas também protege a arquitetura para as próximas versões do Forex Assist.
+--
+
 
 
