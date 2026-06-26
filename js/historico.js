@@ -104,6 +104,7 @@ async function carregarHistorico() {
             ${dataSinal} &nbsp; 
             ${dataObj ? dataObj.toLocaleTimeString("pt-BR", { timeZone: "America/Sao_Paulo" }).substring(0, 5) : "--:--"}
             ${!isCooldown ? ` | Qualidade: ${sinal.qualidade ?? "-"}%` : ""}
+            ${sinal.loteUtilizado ? ` | Lote: ${sinal.loteUtilizado}` : ""}
           </div>
           ${sinal.movimentoPips !== undefined ? `
             <div style="margin-top:6px; font-size:12px; color:${sinal.resultado === 'WIN' ? '#00ff88' : '#ff4444'}; font-weight:bold;">
@@ -119,6 +120,7 @@ async function carregarHistorico() {
               <div>🏠 EMA 200: <b>${sinal.ema200 ? Number(sinal.ema200).toFixed(5) : '-'}</b></div>
               <div>💰 Entrada: <b>${sinal.precoEntrada || '-'}</b></div>
               <div>🏁 Saída: <b>${sinal.precoFechamento || '-'}</b></div>
+              <div>💳 Lote: <b>${sinal.loteUtilizado || '0.04'}</b></div>
             </div>
             ${sinal.movimentoPips !== undefined ? `
               <div style="margin-top:10px; padding:8px; border-radius:4px; background:rgba(255,255,255,0.05); text-align:center; font-weight:bold;">

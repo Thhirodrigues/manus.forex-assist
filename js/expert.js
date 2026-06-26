@@ -98,20 +98,6 @@ setInterval(async () => {
         ).innerHTML =
             dados.cooldownsHoje || 0;
 
-        let ultimaAnalise =
-    dados.ultimaAnalise ||
-    "Aguardando análise";
-
-ultimaAnalise =
-    ultimaAnalise
-      .replaceAll("CALL", "🟢 COMPRA")
-      .replaceAll("PUT", "🔴 VENDA");
-
-document.getElementById(
-    "ultimoSinal"
-).innerHTML =
-    ultimoSinal;
-
         // Exibir pares em quarentena
         const quarentenaEl = document.getElementById("expertQuarentena");
         let vetosHtml = "";
@@ -123,19 +109,37 @@ document.getElementById(
         });
         quarentenaEl.innerHTML = vetosHtml || "Nenhum par bloqueado.";
 
-let ultimoSinal =
-    dados.ultimoSinal ||
-    "Nenhum sinal";
+        // Atualizar Último Sinal
+        let ultimoSinal =
+            dados.ultimoSinal ||
+            "Nenhum sinal";
 
-ultimoSinal =
-    ultimoSinal
-      .replaceAll("CALL", "🟢 COMPRA")
-      .replaceAll("PUT", "🔴 VENDA");
+        ultimoSinal =
+            ultimoSinal
+              .replaceAll("CALL", "🟢 COMPRA")
+              .replaceAll("PUT", "🔴 VENDA");
 
         const ultimoSinalEl = document.getElementById("ultimoSinal");
-        ultimoSinalEl.innerHTML = ultimoSinal;
-        if (dados.ultimoSinalId) {
-            ultimoSinalEl.dataset.id = dados.ultimoSinalId;
+        if (ultimoSinalEl) {
+            ultimoSinalEl.innerHTML = ultimoSinal;
+            if (dados.ultimoSinalId) {
+                ultimoSinalEl.dataset.id = dados.ultimoSinalId;
+            }
+        }
+
+        // Atualizar Última Análise
+        let ultimaAnalise =
+            dados.ultimaAnalise ||
+            "Aguardando análise";
+
+        ultimaAnalise =
+            ultimaAnalise
+              .replaceAll("CALL", "🟢 COMPRA")
+              .replaceAll("PUT", "🔴 VENDA");
+
+        const ultimaAnaliseEl = document.getElementById("ultimaAnalise");
+        if (ultimaAnaliseEl) {
+            ultimaAnaliseEl.innerHTML = ultimaAnalise;
         }
 
     } catch (erro) {
