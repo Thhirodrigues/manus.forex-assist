@@ -6068,10 +6068,481 @@ Minha avaliação
 Depois dessa parte, considero que o Documento Mestre deixa de ser apenas um documento de projeto e passa a ser um Manual Oficial de Arquitetura, Engenharia e Governança.
 Na minha opinião, este foi o complemento que mais agregou valor à documentação, porque preserva não apenas a estrutura do sistema, mas também o raciocínio que levou às decisões técnicas. Isso tende a evitar retrabalho e mudanças que enfraqueçam a arquitetura nas próximas versões.
 --
-
+ENTREGA 1
 E existe uma frase que eu gostaria que entrasse no Documento Mestre algum dia:
 "Nenhum conhecimento relevante do projeto deverá permanecer apenas na memória das conversas."
 ---
+
+AUDITORIA DE ENGENHARIA — ENTREGA 2
+BACKLOG OFICIAL DE DÍVIDAS TÉCNICAS
+Este conteúdo, na minha opinião, merece um documento próprio (TECH_DEBT.md) no futuro. Enquanto ele não existir, sugiro colocá-lo temporariamente no Documento Mestre.
+--
+BACKLOG OFICIAL DE DÍVIDAS TÉCNICAS
+
+Objetivo
+
+Registrar todas as dívidas técnicas identificadas durante a auditoria do Forex Assist.
+
+Uma Dívida Técnica não representa necessariamente um erro.
+
+Representa qualquer aspecto da implementação que possa reduzir qualidade, manutenção, clareza ou escalabilidade.
+
+Nenhuma dívida técnica deverá permanecer apenas na memória das conversas.
+
+---
+
+CLASSIFICAÇÃO
+
+P0 — Crítica
+
+Afeta funcionamento ou arquitetura.
+
+Correção prioritária.
+
+---
+
+P1 — Alta
+
+Não impede funcionamento.
+
+Impacta evolução.
+
+---
+
+P2 — Média
+
+Melhoria estrutural.
+
+Pode aguardar.
+
+---
+
+P3 — Baixa
+
+Melhoria de organização.
+
+Sem impacto imediato.
+
+---
+
+DT-001
+
+Título
+
+Auditoria completa do Scanner Engine.
+
+Prioridade
+
+P0
+
+Status
+
+Aberta.
+
+Objetivo
+
+Validar toda a implementação do núcleo operacional.
+
+Resultado esperado
+
+Confirmação da aderência entre implementação e arquitetura.
+
+---
+
+DT-002
+
+Título
+
+Auditoria completa do MarketData.
+
+Prioridade
+
+P0
+
+Status
+
+Aberta.
+
+Objetivo
+
+Validar aquisição, normalização e distribuição dos dados.
+
+---
+
+DT-003
+
+Título
+
+Auditoria do fluxo Scanner → Firestore.
+
+Prioridade
+
+P0
+
+Status
+
+Aberta.
+
+Objetivo
+
+Confirmar persistência correta das operações.
+
+---
+
+DT-004
+
+Título
+
+Auditoria do Result Checker.
+
+Prioridade
+
+P0
+
+Status
+
+Aberta.
+
+Objetivo
+
+Confirmar atualização automática de todas as operações pendentes.
+
+---
+
+DT-005
+
+Título
+
+Auditoria do Histórico.
+
+Prioridade
+
+P1
+
+Status
+
+Aberta.
+
+Objetivo
+
+Confirmar consistência entre banco, estatísticas e Interface.
+
+---
+
+DT-006
+
+Título
+
+Auditoria do Expert.
+
+Prioridade
+
+P1
+
+Status
+
+Aberta.
+
+Objetivo
+
+Validar separação entre Interface e inteligência.
+
+---
+
+DT-007
+
+Título
+
+Auditoria das dependências.
+
+Prioridade
+
+P1
+
+Status
+
+Aberta.
+
+Objetivo
+
+Eliminar dependências desnecessárias.
+
+---
+
+DT-008
+
+Título
+
+Auditoria de código morto.
+
+Prioridade
+
+P2
+
+Status
+
+Aberta.
+
+Objetivo
+
+Identificar funções sem utilização.
+
+---
+
+DT-009
+
+Título
+
+Auditoria de duplicações.
+
+Prioridade
+
+P2
+
+Status
+
+Aberta.
+
+Objetivo
+
+Eliminar lógica repetida.
+
+---
+
+DT-010
+
+Título
+
+Sincronização completa entre documentação e implementação.
+
+Prioridade
+
+P1
+
+Status
+
+Em andamento.
+
+Objetivo
+
+Garantir que a documentação represente fielmente o estado do código.
+
+---
+
+REGRA DE ENGENHARIA
+
+Nenhuma dívida técnica poderá ser removida sem:
+
+- auditoria;
+- validação;
+- registro no Worklog;
+- atualização do Documento Mestre (quando aplicável).
+
+As dívidas técnicas representam o backlog oficial da Consolidação da Engenharia.
+---
+Decisão de Arquitetura
+Thi, vou tomar uma decisão que acho que vai mudar nosso desenvolvimento daqui para frente.
+Vamos trabalhar com dois backlogs.
+Backlog Funcional
+Tudo que agrega valor ao usuário.
+Exemplos:
+Novo Expert.
+IA.
+Dashboard.
+Estatísticas.
+Alertas.
+Gestão da banca.
+Esse backlog pertence ao ROADMAP.
+Backlog Técnico
+Tudo que melhora a qualidade interna.
+Exemplos:
+Refatoração.
+Auditoria.
+Dívidas técnicas.
+Testes.
+Acoplamento.
+Performance.
+Documentação.
+Esse backlog pertence ao futuro TECH_DEBT.md.
+Minha maior decisão de hoje
+Essa talvez seja a decisão mais importante da Consolidação.
+Nunca mais misturar evolução funcional com evolução técnica.
+Porque são trabalhos completamente diferentes.
+Na minha experiência, separar esses dois tipos de backlog evita que melhorias internas sejam constantemente adiadas por causa de novas funcionalidades. Isso preserva a qualidade do projeto ao longo do tempo.
+Próximo trabalho
+Agora começa a parte que eu mais estava esperando desde que você enviou o repositório.
+Auditoria profunda do primeiro arquivo do projeto:
+scripts/scanner.js
+Não será uma leitura superficial.
+Será uma inspeção linha por linha para produzir o primeiro Laudo Técnico Oficial do Forex Assist.
+Na minha opinião, esse será o início da verdadeira consolidação da engenharia do projeto.
+---
+
+ENTREGA 3
+---
+GOVERNANÇA DA ENGENHARIA
+
+DESTINO FUTURO
+
+Documento Mestre
+
+↓
+
+ENGINEERING.md
+
+---
+
+OBJETIVO
+
+Estabelecer oficialmente como o Forex Assist deverá ser desenvolvido, auditado e evoluído.
+
+Este capítulo define papéis, responsabilidades e critérios permanentes da engenharia.
+
+---
+
+PAPÉIS
+
+Product Owner
+
+Responsável por:
+
+- visão do produto;
+- prioridades de negócio;
+- validação funcional;
+- aprovação das decisões.
+
+Não possui obrigação de definir soluções técnicas.
+
+---
+
+Arquiteto de Software
+
+Responsável por:
+
+- arquitetura;
+- organização do código;
+- auditorias;
+- dívidas técnicas;
+- documentação técnica;
+- impacto das alterações.
+
+Toda recomendação arquitetural deverá priorizar estabilidade e evolução de longo prazo.
+
+---
+
+Implementação
+
+Toda implementação deverá seguir:
+
+Documento Mestre
+
+↓
+
+Arquitetura
+
+↓
+
+Decisões
+
+↓
+
+Código
+
+Nunca o caminho inverso.
+
+---
+
+FLUXO DE DESENVOLVIMENTO
+
+Nova ideia
+
+↓
+
+Análise arquitetural
+
+↓
+
+Definição do módulo responsável
+
+↓
+
+Implementação
+
+↓
+
+Auditoria
+
+↓
+
+Atualização do Documento Mestre
+
+↓
+
+Atualização do Worklog
+
+↓
+
+Conclusão
+
+---
+
+HIERARQUIA DAS DECISÕES
+
+Em caso de conflito, prevalece:
+
+1. Documento Mestre
+
+2. Decisões Arquiteturais
+
+3. Arquitetura Oficial
+
+4. Código
+
+5. Worklog
+
+O Worklog registra acontecimentos.
+
+Ele não substitui decisões arquiteturais.
+
+---
+
+PRINCÍPIO DA MEMÓRIA PERMANENTE
+
+Nenhum conhecimento relevante do projeto deverá permanecer apenas na memória das conversas.
+
+Todo conhecimento considerado importante deverá ser registrado na documentação oficial.
+
+Esse princípio garante continuidade do projeto independentemente da janela de contexto, da ferramenta utilizada ou do responsável pelo desenvolvimento.
+
+---
+
+PRINCÍPIO DA AUDITORIA
+
+Nenhum módulo será considerado concluído apenas porque funciona.
+
+Todo módulo deverá atender simultaneamente aos critérios de:
+
+- funcionamento;
+- organização;
+- arquitetura;
+- documentação;
+- manutenção;
+- escalabilidade.
+
+---
+
+MISSÃO DA ENGENHARIA
+
+A engenharia do Forex Assist possui como missão preservar a qualidade do projeto ao longo do tempo.
+
+Novas funcionalidades são importantes.
+
+Entretanto, preservar a arquitetura, a clareza do código e a memória técnica do projeto possui prioridade permanente.
+
+A evolução do Forex Assist deverá ser guiada pela engenharia, e não apenas pela implementação.
+-----
+
+
 
 
 
