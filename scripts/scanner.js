@@ -20,6 +20,7 @@ const {
   existeCooldown: verificarCooldown,
   salvarOperacao
 } = require("./riskManager");
+const { verificarVetoDrawdown } = require("./expertLogic");
 
 const pares = [
   "EUR/USD",
@@ -72,6 +73,16 @@ async function main() {
 
     console.log("\n========================");
     console.log(`Analisando ${par}`);
+
+    const statusVeto = await verificarVetoDrawdown(db, par);
+    if (statusVeto.vetado) {
+        console.log(`[VETO EXPERT] ${par} bloqueado: ${statusVeto.motivo}`);
+        // Registrar o veto no status do scanner para feedback na dashboard
+        await db.collection("scanner").doc("status").set({
+            [`veto_${par.replace("/", "_")}`]: statusVeto.motivo
+        }, { merge: true });
+        continue;
+    }
 
     await analisarParNovo({
     db,

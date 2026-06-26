@@ -38,6 +38,13 @@ function dashboardView() {
     </div>
 
     <div class="card">
+        <div class="card-title">Quarentena Expert (Vetos)</div>
+        <div id="expertQuarentena" style="font-size:12px; color:#ff4444; max-height:150px; overflow-y:auto;">
+            Nenhum par bloqueado.
+        </div>
+    </div>
+
+    <div class="card">
         <div class="card-title">Debug Firebase</div>
         <div id="debugFirebase">
             Iniciando...
@@ -101,9 +108,20 @@ ultimaAnalise =
       .replaceAll("PUT", "🔴 VENDA");
 
 document.getElementById(
-    "ultimaAnalise"
+    "ultimoSinal"
 ).innerHTML =
-    ultimaAnalise;
+    ultimoSinal;
+
+        // Exibir pares em quarentena
+        const quarentenaEl = document.getElementById("expertQuarentena");
+        let vetosHtml = "";
+        Object.keys(dados).forEach(key => {
+            if (key.startsWith("veto_")) {
+                const par = key.replace("veto_", "").replace("_", "/");
+                vetosHtml += `<div style="margin-bottom:5px;">🚫 <b>${par}</b>: ${dados[key]}</div>`;
+            }
+        });
+        quarentenaEl.innerHTML = vetosHtml || "Nenhum par bloqueado.";
 
 let ultimoSinal =
     dados.ultimoSinal ||
