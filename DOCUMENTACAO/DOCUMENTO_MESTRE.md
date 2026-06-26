@@ -2882,3 +2882,24 @@ Nenhum sinal deve ser ignorado por falha de formatação cronológica.
 ---
 
 Fim da Atualização de Governança — Junho/2026.
+
+---
+
+106. REGRAS DE OURO DE ASSERTIVIDADE
+
+Para garantir a preservação da banca, foram estabelecidas travas técnicas obrigatórias no motor de análise:
+
+1. Filtro EMA 200 (Tendência Macro):
+   - O sistema valida a posição do preço em relação à média móvel exponencial de 200 períodos.
+   - Sinais de COMPRA (BUY) são bloqueados se o preço estiver abaixo da EMA 200.
+   - Sinais de VENDA (SELL) são bloqueados se o preço estiver acima da EMA 200.
+
+Este filtro é permanente e visa garantir que o operador esteja sempre a favor da tendência institucional.
+
+---
+
+107. MARCOS IMPORTANTES (MELHORIAS TÉCNICAS)
+
+- [25/06/2026] Implementação do Filtro EMA 200 e expansão da captura de dados da API TwelveData para 300 candles.
+
+---

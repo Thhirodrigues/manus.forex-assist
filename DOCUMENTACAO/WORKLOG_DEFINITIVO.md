@@ -1640,3 +1640,30 @@ MARCO IMPORTANTE: Restauração da Integridade do Histórico
 Com a confirmação do administrador, a correção do histórico foi publicada no repositório oficial, marcando o primeiro passo de manutenção assistida pela Manus AI, preservando a filosofia de "Dados acima de Opinião".
 
 ---
+
+---
+
+Fase 4 — Refinamento de Assertividade (Filtros Institucionais)
+
+Com a governança estabelecida, o projeto avançou para a melhoria da qualidade técnica dos sinais, visando reduzir o drawdown em operações reais.
+
+---
+
+Implementação do Filtro EMA 200 (Tendência Macro)
+
+Foi identificada a necessidade de alinhar as entradas de curto prazo (M5) com a tendência institucional de longo prazo.
+
+Ações realizadas:
+- Atualização do `marketData.js` para capturar 300 candles (necessário para o cálculo da EMA 200);
+- Modificação do `pairAnalyzer.js` para incluir a trava de segurança EMA 200;
+- Regra implementada: Operações de COMPRA permitidas apenas acima da EMA 200 e VENDA apenas abaixo.
+
+Este filtro atua como um "mestre de cerimônias", vetando sinais que tentam operar contra a tendência dominante do mercado.
+
+---
+
+MARCO IMPORTANTE: Ativação do Filtro de Tendência Macro
+
+A implementação foi concluída e publicada no repositório. Este marco representa a transição do Forex Assist de um scanner técnico simples para um sistema de apoio à decisão alinhado com estratégias institucionais de alta performance.
+
+---
