@@ -3073,3 +3073,146 @@ Objetivo Final
 
 Concluir o Forex Assist dentro do prazo estabelecido, reduzindo retrabalho e mantendo uma linha contínua de desenvolvimento.
 ---
+AUDITORIA TÉCNICA 26/06/26
+
+---
+
+ARQUITETURA FÍSICA DO REPOSITÓRIO
+
+Após auditoria do repositório oficial do Forex Assist V5 Expert Alpha, foi definida a arquitetura física do projeto.
+
+Estrutura oficial:
+
+forex-assist-main/
+
+├── .github/
+│   └── workflows/
+│       ├── forex-scanner-real.yml
+│       └── result-checker.yml
+│
+├── DOCUMENTACAO/
+│   ├── DOCUMENTO_MESTRE.md
+│   └── WORKLOG_DEFINITIVO.md
+│
+├── assets/
+│
+├── css/
+│   └── styles.css
+│
+├── js/
+│   ├── app.js
+│   ├── checker.js
+│   ├── config.js
+│   ├── expert.js
+│   ├── firebase-config.js
+│   ├── historico.js
+│   ├── manual.js
+│   ├── push.js
+│   └── scanner.js
+│
+├── scripts/
+│   ├── expertLogic.js
+│   ├── firebase.js
+│   ├── marketAnalyzer.js
+│   ├── marketData.js
+│   ├── pairAnalyzer.js
+│   ├── riskManager.js
+│   ├── scanner.js
+│   └── utils.js
+│
+├── index.html
+├── manifest.json
+├── sw.js
+└── firebase-messaging-sw.js
+
+Organização das Camadas
+
+O projeto encontra-se dividido em quatro camadas principais.
+
+Camada de Interface
+
+Responsável pela experiência do usuário.
+
+Arquivos:
+
+- index.html
+- css/
+- js/
+
+Responsabilidade:
+
+- Interface.
+- Navegação.
+- Histórico.
+- Configurações.
+- Log.
+- Comunicação com o usuário.
+
+---
+
+Camada de Engine
+
+Responsável pela lógica operacional.
+
+Arquivos:
+
+- scripts/
+
+Responsabilidade:
+
+- Scanner.
+- Expert.
+- Análise de mercado.
+- Gestão de risco.
+- Tratamento dos dados.
+- Utilidades.
+
+Nenhuma lógica pesada deve permanecer na camada de Interface.
+
+---
+
+Camada de Infraestrutura
+
+Responsável pelos serviços externos.
+
+Componentes:
+
+- Firebase
+- Firestore
+- TwelveData
+- Service Workers
+- Push Notifications
+
+Responsabilidade:
+
+Persistência, comunicação e integração externa.
+
+---
+
+Camada de Automação
+
+Responsável pelas execuções automáticas.
+
+Componentes:
+
+- GitHub Actions
+
+Workflows:
+
+- Scanner
+- Result Checker
+
+Esses workflows executam a Engine sem depender da Interface.
+
+---
+
+Princípio Arquitetural
+
+A Interface nunca deve implementar regras de negócio.
+
+Toda inteligência do sistema deve permanecer concentrada na Engine.
+
+A Interface apenas apresenta informações e encaminha ações ao núcleo operacional.
+---
+
+
