@@ -2944,3 +2944,22 @@ Requisitos de Interface:
 - [25/06/2026] Implementação do sistema de auditoria detalhada com expansão de cartões e registro de indicadores técnicos.
 
 ---
+
+---
+
+112. PADRÃO DE PERSISTÊNCIA DE INTERFACE
+
+A interface do Forex Assist deve manter o estado de interação do usuário mesmo durante atualizações automáticas.
+
+Diretrizes:
+- Estado de Expansão: Cartões expandidos pelo usuário permanecem abertos durante reloads automáticos.
+- Armazenamento Local: Usar `localStorage` para persistir a lista de IDs de sinais em visualização.
+- Limpeza Controlada: O botão "Minimizar Tudo" deve limpar o estado armazenado.
+
+---
+
+113. MARCOS IMPORTANTES (ESTABILIDADE)
+
+- [25/06/2026] Implementação de persistência de estado para cartões expandidos com localStorage.
+
+---

@@ -1724,3 +1724,31 @@ MARCO IMPORTANTE: Auditoria de Confluência Ativada
 O sistema agora funciona como uma "caixa preta" de avião, registrando e permitindo a consulta expansível de todos os dados técnicos de cada operação.
 
 ---
+
+---
+
+Fase 7 — Persistência de Interface e Estabilidade de Visualização
+
+Com a auditoria técnica em funcionamento, o foco passou para garantir que a experiência do usuário não fosse interrompida por atualizações automáticas.
+
+---
+
+Fixação de Estado de Cartões Expandidos
+
+Foi identificado que os cartões de sinais se fechavam durante as atualizações automáticas a cada 5 segundos, prejudicando a análise contínua.
+
+Ações realizadas:
+- Implementação de sistema de persistência com `localStorage`;
+- Cada sinal aberto agora é registrado em uma lista de "sinaisAbertos";
+- Ao recarregar o histórico, o sistema verifica essa lista e mantém os cartões expandidos conforme a última ação do usuário;
+- O botão "Minimizar Tudo" também limpa o estado armazenado.
+
+Esta correção garante que o operador possa manter um sinal em análise enquanto o sistema continua atualizando os dados em tempo real.
+
+---
+
+MARCO IMPORTANTE: Interface Estável e Responsiva
+
+A persistência de estado marca a transição de um sistema reativo para um sistema responsivo, onde a interface se adapta ao comportamento do usuário sem perdas de contexto.
+
+---
