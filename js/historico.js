@@ -10,6 +10,29 @@ function historicoView() {
   `;
 }
 
+// Gerenciar estado de sinais abertos
+function obterSinaisAbertos() {
+  const stored = localStorage.getItem('sinaisAbertos');
+  return stored ? JSON.parse(stored) : [];
+}
+
+function salvarSinalAberto(sinalId) {
+  const abertos = obterSinaisAbertos();
+  if (!abertos.includes(sinalId)) {
+    abertos.push(sinalId);
+    localStorage.setItem('sinaisAbertos', JSON.stringify(abertos));
+  }
+}
+
+function removerSinalAberto(sinalId) {
+  const abertos = obterSinaisAbertos();
+  const index = abertos.indexOf(sinalId);
+  if (index > -1) {
+    abertos.splice(index, 1);
+    localStorage.setItem('sinaisAbertos', JSON.stringify(abertos));
+  }
+}
+
 async function carregarHistorico() {
   const lista = document.getElementById("historicoLista");
   const stats = document.getElementById("historicoStats");
@@ -19,7 +42,7 @@ async function carregarHistorico() {
     const snapshot = await db
       .collection("historico")
       .orderBy("timestamp", "desc")
-      .limit(300) // Aumentado para garantir sinais antigos
+      .limit(300)
       .get();
 
     let wins = 0;
@@ -27,22 +50,21 @@ async function carregarHistorico() {
     const gruposPorData = {};
 
     const hojeStr = new Date().toLocaleDateString("pt-BR", { timeZone: "America/Sao_Paulo" });
+    const sinaisAbertos = obterSinaisAbertos();
 
     snapshot.forEach((doc) => {
       const sinal = doc.data();
       let dataObj = null;
 
-      // 1. Tentar extrair data do timestamp (Firestore object, number ou string)
       if (sinal.timestamp) {
           let ts = sinal.timestamp;
-          if (ts.toDate) ts = ts.toDate(); // Firestore Timestamp
-          else if (typeof ts === "number" && ts < 1000000000000) ts = ts * 1000; // Segundos para ms
+          if (ts.toDate) ts = ts.toDate();
+          else if (typeof ts === "number" && ts < 1000000000000) ts = ts * 1000;
           
           const d = new Date(ts);
           if (!isNaN(d.getTime())) dataObj = d;
       }
 
-      // 2. Fallback para campo 'horario' ou 'data'
       if (!dataObj && (sinal.horario || sinal.data)) {
           const str = sinal.horario || sinal.data;
           const partes = str.match(/(\d{2})\/(\d{2})\/(\d{4})/);
@@ -61,8 +83,10 @@ async function carregarHistorico() {
       const isCooldown = sinal.status === "COOLDOWN" || sinal.origem === "cooldown";
 
       const isDestaque = app.sinalParaDestacar === doc.id;
+      const estaAberto = sinaisAbertos.includes(doc.id) || isDestaque;
       const detalheId = `detalhe-${doc.id}`;
       const borderStyle = isDestaque ? 'border: 2px solid #00ff88; background: rgba(0, 255, 136, 0.1);' : '';
+      
       const card = `
         <div class="list-item" id="sinal-${doc.id}" style="${borderStyle} cursor:pointer;" data-sinal-id="${doc.id}">
           <div style="display:flex; justify-content:space-between; align-items:center; font-size:14px; font-weight:bold;">
@@ -87,7 +111,7 @@ async function carregarHistorico() {
             </div>
           ` : ''}
           
-          <div id="${detalheId}" style="display: ${isDestaque ? 'block' : 'none'}; margin-top:10px; padding-top:10px; border-top:1px solid rgba(255,255,255,0.1); font-size:12px; color:#8c95b3;">
+          <div id="${detalheId}" style="display: ${estaAberto ? 'block' : 'none'}; margin-top:10px; padding-top:10px; border-top:1px solid rgba(255,255,255,0.1); font-size:12px; color:#8c95b3;">
             <div style="display:grid; grid-template-columns: 1fr 1fr; gap:8px;">
               <div>📉 RSI: <b>${sinal.rsi ? Number(sinal.rsi).toFixed(2) : '-'}</b></div>
               <div>📊 EMA 9: <b>${sinal.ema9 ? Number(sinal.ema9).toFixed(5) : '-'}</b></div>
@@ -158,11 +182,21 @@ async function carregarHistorico() {
 
     // Adicionar listeners de clique após renderizar
     document.querySelectorAll('[data-sinal-id]').forEach(el => {
-        el.addEventListener('click', function() {
-            const detalheId = `detalhe-${this.dataset.sinalId}`;
+        el.addEventListener('click', function(e) {
+            e.stopPropagation();
+            const sinalId = this.dataset.sinalId;
+            const detalheId = `detalhe-${sinalId}`;
             const detalhe = document.getElementById(detalheId);
             if (detalhe) {
-                detalhe.style.display = detalhe.style.display === 'none' ? 'block' : 'none';
+                const estaAberto = detalhe.style.display !== 'none';
+                detalhe.style.display = estaAberto ? 'none' : 'block';
+                
+                // Persistir estado
+                if (estaAberto) {
+                    removerSinalAberto(sinalId);
+                } else {
+                    salvarSinalAberto(sinalId);
+                }
             }
         });
     });
@@ -171,7 +205,7 @@ async function carregarHistorico() {
         const el = document.getElementById(`sinal-${app.sinalParaDestacar}`);
         if (el) {
             el.scrollIntoView({ behavior: 'smooth', block: 'center' });
-            app.sinalParaDestacar = null; // Limpa após destacar
+            app.sinalParaDestacar = null;
         }
     }
 
@@ -184,6 +218,7 @@ async function carregarHistorico() {
                 const el = document.getElementById(`data${idData}`);
                 if (el) el.style.display = "none";
             });
+            localStorage.setItem('sinaisAbertos', JSON.stringify([]));
         };
     }
 
