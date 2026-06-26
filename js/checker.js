@@ -18,6 +18,9 @@ const db = admin.firestore();
 // =====================================================
 
 const TEMPO_RESULTADO_MINUTOS = 15;
+const PIPS_ALVO = 12.5; // Alvo de $5.00 com lote 0.04
+const LOTE_PADRAO = 0.04;
+const VALOR_POR_PIP = 0.40; // $0.40 por pip em lote 0.04
 
 // =====================================================
 // UTILITÁRIOS
@@ -98,28 +101,28 @@ async function verificarSinais() {
             const precoAtual =
                 await buscarPrecoFechamento(sinal.par);
 
-            let resultado = "LOSS";
-
-            if (
-                sinal.direcao === "BUY" &&
-                precoAtual > sinal.precoEntrada
-            ) {
-                resultado = "WIN";
-            }
-
-            if (
-                sinal.direcao === "SELL" &&
-                precoAtual < sinal.precoEntrada
-            ) {
-                resultado = "WIN";
-            }
-
             const movimentoPips =
                 calcularPips(
                     sinal.par,
                     sinal.precoEntrada,
                     precoAtual
                 );
+
+            let resultado = "PENDENTE"; // Mantém pendente se não atingir alvos
+
+            if (sinal.direcao === "BUY") {
+                if (movimentoPips >= PIPS_ALVO) resultado = "WIN";
+                else if (movimentoPips <= -PIPS_ALVO) resultado = "LOSS";
+            } else if (sinal.direcao === "SELL") {
+                // Para SELL, pips positivos significam queda de preço, então invertemos para o cálculo
+                if (movimentoPips <= -PIPS_ALVO) resultado = "WIN";
+                else if (movimentoPips >= PIPS_ALVO) resultado = "LOSS";
+            }
+
+            // Se ainda estiver pendente e o tempo expirou muito (ex: 2h), podemos forçar um resultado de mercado
+            // Mas por enquanto, vamos seguir a regra dos pips fixos.
+            
+            const lucroEstimado = (movimentoPips * (sinal.direcao === "SELL" ? -1 : 1) * VALOR_POR_PIP).toFixed(2);
 
             const variacaoPercentual =
                 calcularVariacaoPercentual(
@@ -137,6 +140,10 @@ async function verificarSinais() {
                     new Date().toLocaleTimeString("pt-BR"),
 
                 movimentoPips,
+
+                lucroEstimado: Number(lucroEstimado),
+
+                loteUtilizado: LOTE_PADRAO,
 
                 variacaoPercentual,
 

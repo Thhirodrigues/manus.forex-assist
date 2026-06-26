@@ -121,8 +121,15 @@ async function carregarHistorico() {
               <div>🏁 Saída: <b>${sinal.precoFechamento || '-'}</b></div>
             </div>
             ${sinal.movimentoPips !== undefined ? `
-              <div style="margin-top:10px; padding:8px; border-radius:4px; background:rgba(255,255,255,0.05); text-align:center; color:${sinal.resultado === 'WIN' ? '#00ff88' : '#ff4444'}; font-weight:bold;">
-                VARIAÇÃO FINAL: ${sinal.movimentoPips > 0 ? '+' : ''}${sinal.movimentoPips} PIPS
+              <div style="margin-top:10px; padding:8px; border-radius:4px; background:rgba(255,255,255,0.05); text-align:center; font-weight:bold;">
+                <div style="color:${sinal.resultado === 'WIN' ? '#00ff88' : (sinal.resultado === 'LOSS' ? '#ff4444' : '#8c95b3')};">
+                  VARIAÇÃO: ${sinal.movimentoPips > 0 ? '+' : ''}${sinal.movimentoPips} PIPS
+                </div>
+                ${sinal.lucroEstimado !== undefined ? `
+                  <div style="margin-top:5px; font-size:14px; color:${sinal.lucroEstimado >= 0 ? '#00ff88' : '#ff4444'};">
+                    RESULTADO: ${sinal.lucroEstimado >= 0 ? '+' : ''}$${sinal.lucroEstimado.toFixed(2)} (Lote ${sinal.loteUtilizado || '0.04'})
+                  </div>
+                ` : ''}
               </div>
             ` : ''}
           </div>
