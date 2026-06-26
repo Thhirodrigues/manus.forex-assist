@@ -1804,3 +1804,30 @@ MARCO IMPORTANTE: Operacional Financeiro Ativado
 O sistema agora analisa e reporta resultados baseados em dólares e pips fixos, preparando o terreno para a futura configuração dinâmica pelo usuário.
 
 ---
+
+---
+
+Fase 10 — Refinamento de Interface e Clareza de Informações
+
+Com a base técnica consolidada, o foco passou para a organização visual e a eliminação de duplicidade de informações na Dashboard.
+
+---
+
+Reorganização de Layout e Diferenciação de Conceitos
+
+Ações realizadas:
+- **Repositório de Lote:** O campo "Lote" foi movido para a parte inferior dos detalhes do sinal, logo abaixo do resultado financeiro em dólares, proporcionando uma leitura hierárquica clara;
+- **Clareza de Conceitos:** A Dashboard agora diferencia explicitamente:
+  - **Cooldowns (30 min):** Proteção contra sinais repetitivos no mesmo movimento de preço.
+  - **Quarentena Expert (Veto):** Bloqueio de pares com baixa performance (3 LOSS seguidos em 24h).
+- **Eliminação de Redundância:** Removida a duplicidade de informação que poderia confundir o operador entre os dois mecanismos de proteção.
+
+Esta mudança melhora a compreensão do sistema e facilita a auditoria de cada sinal.
+
+---
+
+MARCO IMPORTANTE: Interface Clarificada e Hierarquizada
+
+A organização visual agora reflete a lógica técnica do sistema, permitindo que o operador compreenda rapidamente por que um sinal foi ou não emitido.
+
+---

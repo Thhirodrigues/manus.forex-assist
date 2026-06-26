@@ -3010,3 +3010,30 @@ A interface deve exibir o valor em USD correspondente à movimentação de pips.
 - [25/06/2026] Implementação de alvos fixos de $5.00 (12.5 pips) e exibição financeira no histórico.
 
 ---
+
+---
+
+118. DIFERENCIAÇÃO: COOLDOWN vs. QUARENTENA EXPERT
+
+Ambos são mecanismos de proteção, mas com funções distintas:
+
+**Cooldown (30 minutos):**
+- Proteção Temporal: Evita sinais repetitivos para o mesmo par no mesmo movimento de preço.
+- Objetivo: Impedir que o sistema "insista" em um ativo que já foi analisado recentemente.
+- Duração: 30 minutos após o último sinal para o par.
+
+**Quarentena Expert (Veto por Performance):**
+- Proteção Estatística: Bloqueia pares com baixo desempenho recente (3 LOSS seguidos em 24h).
+- Objetivo: Proteger o capital contra ciclos desfavoráveis de mercado para a estratégia.
+- Duração: 24 horas a partir do terceiro LOSS consecutivo.
+
+Ambos devem ser exibidos na Dashboard de forma clara e diferenciada.
+
+---
+
+119. MARCOS IMPORTANTES (CLAREZA DE INTERFACE)
+
+- [25/06/2026] Reorganização de layout: Lote movido para a parte inferior do resultado.
+- [25/06/2026] Diferenciação visual de Cooldown e Quarentena Expert na Dashboard.
+
+---
