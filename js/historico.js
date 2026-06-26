@@ -62,7 +62,7 @@ async function carregarHistorico() {
 
       const isDestaque = app.sinalParaDestacar === doc.id;
       const card = `
-        <div class="list-item" id="sinal-${doc.id}" style="${isDestaque ? 'border: 2px solid #00ff88; background: rgba(0, 255, 136, 0.1);' : ''}">
+        <div class="list-item" id="sinal-${doc.id}" style="${isDestaque ? 'border: 2px solid #00ff88; background: rgba(0, 255, 136, 0.1);' : ''} cursor:pointer;" onclick="const d = document.getElementById('detalhe-${doc.id}'); d.style.display = d.style.display === 'none' ? 'block' : 'none';">
           <div style="display:flex; justify-content:space-between; align-items:center; font-size:14px; font-weight:bold;">
             <span>
               ${isCooldown ? "🚫" : (sinal.direcao === "BUY" || sinal.direcao === "CALL" ? "🟢" : "🔴")}
@@ -79,11 +79,22 @@ async function carregarHistorico() {
             ${dataObj ? dataObj.toLocaleTimeString("pt-BR", { timeZone: "America/Sao_Paulo" }).substring(0, 5) : "--:--"}
             ${!isCooldown ? ` | Qualidade: ${sinal.qualidade ?? "-"}%` : ""}
           </div>
-          ${sinal.movimentoPips !== undefined ? `
-            <div style="margin-top:6px; font-size:12px; color:${sinal.resultado === 'WIN' ? '#00ff88' : '#ff4444'}; font-weight:bold;">
-              Movimentação: ${sinal.movimentoPips > 0 ? '+' : ''}${sinal.movimentoPips} pips
+          
+          <div id="detalhe-${doc.id}" style="display: ${isDestaque ? 'block' : 'none'}; margin-top:10px; padding-top:10px; border-top:1px solid rgba(255,255,255,0.1); font-size:12px; color:#8c95b3;">
+            <div style="display:grid; grid-template-columns: 1fr 1fr; gap:8px;">
+              <div>📉 RSI: <b>${sinal.rsi ? Number(sinal.rsi).toFixed(2) : '-'}</b></div>
+              <div>📊 EMA 9: <b>${sinal.ema9 ? Number(sinal.ema9).toFixed(5) : '-'}</b></div>
+              <div>📊 EMA 21: <b>${sinal.ema21 ? Number(sinal.ema21).toFixed(5) : '-'}</b></div>
+              <div>🏠 EMA 200: <b>${sinal.ema200 ? Number(sinal.ema200).toFixed(5) : '-'}</b></div>
+              <div>💰 Entrada: <b>${sinal.precoEntrada || '-'}</b></div>
+              <div>🏁 Saída: <b>${sinal.precoFechamento || '-'}</b></div>
             </div>
-          ` : ''}
+            ${sinal.movimentoPips !== undefined ? `
+              <div style="margin-top:10px; padding:8px; border-radius:4px; background:rgba(255,255,255,0.05); text-align:center; color:${sinal.resultado === 'WIN' ? '#00ff88' : '#ff4444'}; font-weight:bold;">
+                VARIAÇÃO FINAL: ${sinal.movimentoPips > 0 ? '+' : ''}${sinal.movimentoPips} PIPS
+              </div>
+            ` : ''}
+          </div>
         </div>
       `;
 
