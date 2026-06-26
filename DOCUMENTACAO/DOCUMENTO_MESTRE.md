@@ -2903,3 +2903,22 @@ Este filtro é permanente e visa garantir que o operador esteja sempre a favor d
 - [25/06/2026] Implementação do Filtro EMA 200 e expansão da captura de dados da API TwelveData para 300 candles.
 
 ---
+
+---
+
+108. FUNCIONALIDADES DE AUDITORIA OPERACIONAL
+
+O sistema deve permitir a rastreabilidade total de cada sinal gerado.
+
+Diretrizes de Interface:
+- Clique no Sinal: Todo sinal exibido no Dashboard deve permitir o redirecionamento imediato para o seu registro histórico.
+- Destaque Visual: Ao navegar do Dashboard para o Histórico, o sinal alvo deve ser destacado visualmente e o grupo de data deve ser expandido automaticamente.
+- Transparência de Pips: O resultado em pips deve ser exibido de forma proeminente para validar a movimentação do mercado em relação ao preço de entrada.
+
+---
+
+109. MARCOS IMPORTANTES (EXPERIÊNCIA DO USUÁRIO)
+
+- [25/06/2026] Implementação da navegação Dashboard -> Histórico com destaque de sinal e exibição de pips.
+
+---

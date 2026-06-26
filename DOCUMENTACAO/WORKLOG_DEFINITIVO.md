@@ -1667,3 +1667,32 @@ MARCO IMPORTANTE: Ativação do Filtro de Tendência Macro
 A implementação foi concluída e publicada no repositório. Este marco representa a transição do Forex Assist de um scanner técnico simples para um sistema de apoio à decisão alinhado com estratégias institucionais de alta performance.
 
 ---
+
+---
+
+Fase 5 — Experiência do Operador e Transparência de Dados
+
+Após fortalecer o motor de análise, o foco voltou-se para a usabilidade e a capacidade de auditoria rápida das operações pelo usuário.
+
+---
+
+Navegação Inteligente e Detalhamento de Pips
+
+Foi implementada uma integração profunda entre o Dashboard e o Histórico para facilitar a identificação de eventos específicos.
+
+Ações realizadas:
+- Ativação de clique no "Último Sinal" do Expert para redirecionamento automático;
+- Lógica de "Deep Linking" no `app.js` para transportar o ID do sinal entre abas;
+- Auto-expansão de grupos de data no `historico.js` quando um sinal é alvo de destaque;
+- Implementação de destaque visual (borda neon) e scroll automático para o sinal selecionado;
+- Exibição direta da movimentação de pips nos cartões do histórico para validação de TP/SL.
+
+Esta atualização permite que o operador confirme instantaneamente o que ocorreu em cada sinal, reforçando a confiança no sistema.
+
+---
+
+MARCO IMPORTANTE: Conexão Dashboard-Histórico e Auditoria de Pips
+
+A funcionalidade foi publicada e testada. Agora o Forex Assist oferece uma jornada fluida desde a detecção do sinal até a análise detalhada do seu resultado técnico.
+
+---
