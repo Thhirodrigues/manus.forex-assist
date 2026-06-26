@@ -6069,5 +6069,9 @@ Depois dessa parte, considero que o Documento Mestre deixa de ser apenas um docu
 Na minha opinião, este foi o complemento que mais agregou valor à documentação, porque preserva não apenas a estrutura do sistema, mas também o raciocínio que levou às decisões técnicas. Isso tende a evitar retrabalho e mudanças que enfraqueçam a arquitetura nas próximas versões.
 --
 
+E existe uma frase que eu gostaria que entrasse no Documento Mestre algum dia:
+"Nenhum conhecimento relevante do projeto deverá permanecer apenas na memória das conversas."
+---
+
 
 
