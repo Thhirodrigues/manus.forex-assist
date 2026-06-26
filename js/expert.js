@@ -32,7 +32,7 @@ function dashboardView() {
 
     <div class="card">
         <div class="card-title">Último Sinal</div>
-        <div id="ultimoSinal" class="signal wait">
+        <div id="ultimoSinal" class="signal wait" style="cursor:pointer;" onclick="app.irParaHistorico(this.dataset.id)">
             Nenhum sinal
         </div>
     </div>
@@ -114,10 +114,11 @@ ultimoSinal =
       .replaceAll("CALL", "🟢 COMPRA")
       .replaceAll("PUT", "🔴 VENDA");
 
-document.getElementById(
-    "ultimoSinal"
-).innerHTML =
-    ultimoSinal;
+        const ultimoSinalEl = document.getElementById("ultimoSinal");
+        ultimoSinalEl.innerHTML = ultimoSinal;
+        if (dados.ultimoSinalId) {
+            ultimoSinalEl.dataset.id = dados.ultimoSinalId;
+        }
 
     } catch (erro) {
 

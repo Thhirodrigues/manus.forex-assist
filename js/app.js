@@ -9,6 +9,14 @@ localStorage.getItem("ultimaAba")
         this.bindEvents();
     },
 
+    irParaHistorico(sinalId) {
+        if (!sinalId) return;
+        this.currentTab = "historico";
+        this.sinalParaDestacar = sinalId;
+        localStorage.setItem("ultimaAba", "historico");
+        this.render();
+    },
+
     bindEvents() {
 
         document.addEventListener("click", (e) => {

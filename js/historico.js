@@ -60,8 +60,9 @@ async function carregarHistorico() {
 
       const isCooldown = sinal.status === "COOLDOWN" || sinal.origem === "cooldown";
 
+      const isDestaque = app.sinalParaDestacar === doc.id;
       const card = `
-        <div class="list-item">
+        <div class="list-item" id="sinal-${doc.id}" style="${isDestaque ? 'border: 2px solid #00ff88; background: rgba(0, 255, 136, 0.1);' : ''}">
           <div style="display:flex; justify-content:space-between; align-items:center; font-size:14px; font-weight:bold;">
             <span>
               ${isCooldown ? "🚫" : (sinal.direcao === "BUY" || sinal.direcao === "CALL" ? "🟢" : "🔴")}
@@ -78,6 +79,11 @@ async function carregarHistorico() {
             ${dataObj ? dataObj.toLocaleTimeString("pt-BR", { timeZone: "America/Sao_Paulo" }).substring(0, 5) : "--:--"}
             ${!isCooldown ? ` | Qualidade: ${sinal.qualidade ?? "-"}%` : ""}
           </div>
+          ${sinal.movimentoPips !== undefined ? `
+            <div style="margin-top:6px; font-size:12px; color:${sinal.resultado === 'WIN' ? '#00ff88' : '#ff4444'}; font-weight:bold;">
+              Movimentação: ${sinal.movimentoPips > 0 ? '+' : ''}${sinal.movimentoPips} pips
+            </div>
+          ` : ''}
         </div>
       `;
 
@@ -116,18 +122,29 @@ async function carregarHistorico() {
       const isHoje = data === hojeStr;
       const label = isHoje ? `HOJE (${data})` : data;
 
+      const temSinalDestacado = app.sinalParaDestacar && gruposPorData[data].includes(`id="sinal-${app.sinalParaDestacar}"`);
+      const mostrarGrupo = isHoje || temSinalDestacado;
+
       finalHtml += `
         <div onclick="const el = document.getElementById('data${idData}'); el.style.display = el.style.display === 'none' ? 'block' : 'none';" 
              style="margin-top:20px; margin-bottom:10px; font-size:12px; color:#8c95b3; font-weight:bold; cursor:pointer; display:flex; align-items:center;">
-          <span style="margin-right:8px;">${isHoje ? "▼" : "▶"}</span> ${label}
+          <span style="margin-right:8px;">${mostrarGrupo ? "▼" : "▶"}</span> ${label}
         </div>
-        <div id="data${idData}" style="display: ${isHoje ? 'block' : 'none'};">
+        <div id="data${idData}" style="display: ${mostrarGrupo ? 'block' : 'none'};">
           ${gruposPorData[data]}
         </div>
       `;
     });
 
     lista.innerHTML = finalHtml || '<div class="list-item">Nenhum sinal encontrado.</div>';
+
+    if (app.sinalParaDestacar) {
+        const el = document.getElementById(`sinal-${app.sinalParaDestacar}`);
+        if (el) {
+            el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            app.sinalParaDestacar = null; // Limpa após destacar
+        }
+    }
 
     // Lógica do botão Minimizar Tudo
     document.getElementById("btnMinimizarTudo").onclick = () => {
