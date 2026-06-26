@@ -10,26 +10,39 @@ function historicoView() {
   `;
 }
 
-// Gerenciar estado de sinais abertos
+// Gerenciar estado de sinais abertos com persistência blindada
 function obterSinaisAbertos() {
-  const stored = localStorage.getItem('sinaisAbertos');
-  return stored ? JSON.parse(stored) : [];
+  try {
+    const stored = localStorage.getItem('sinaisAbertos');
+    return stored ? JSON.parse(stored) : [];
+  } catch (e) {
+    console.error("Erro ao obter sinais abertos:", e);
+    return [];
+  }
 }
 
 function salvarSinalAberto(sinalId) {
-  const abertos = obterSinaisAbertos();
-  if (!abertos.includes(sinalId)) {
-    abertos.push(sinalId);
-    localStorage.setItem('sinaisAbertos', JSON.stringify(abertos));
+  try {
+    const abertos = obterSinaisAbertos();
+    if (!abertos.includes(sinalId)) {
+      abertos.push(sinalId);
+      localStorage.setItem('sinaisAbertos', JSON.stringify(abertos));
+    }
+  } catch (e) {
+    console.error("Erro ao salvar sinal aberto:", e);
   }
 }
 
 function removerSinalAberto(sinalId) {
-  const abertos = obterSinaisAbertos();
-  const index = abertos.indexOf(sinalId);
-  if (index > -1) {
-    abertos.splice(index, 1);
-    localStorage.setItem('sinaisAbertos', JSON.stringify(abertos));
+  try {
+    const abertos = obterSinaisAbertos();
+    const index = abertos.indexOf(sinalId);
+    if (index > -1) {
+      abertos.splice(index, 1);
+      localStorage.setItem('sinaisAbertos', JSON.stringify(abertos));
+    }
+  } catch (e) {
+    console.error("Erro ao remover sinal aberto:", e);
   }
 }
 
@@ -88,7 +101,7 @@ async function carregarHistorico() {
       const borderStyle = isDestaque ? 'border: 2px solid #00ff88; background: rgba(0, 255, 136, 0.1);' : '';
       
       const card = `
-        <div class="list-item" id="sinal-${doc.id}" style="${borderStyle} cursor:pointer;" data-sinal-id="${doc.id}">
+        <div class="list-item" id="sinal-${doc.id}" style="${borderStyle}" data-sinal-id="${doc.id}">
           <div style="display:flex; justify-content:space-between; align-items:center; font-size:14px; font-weight:bold;">
             <span>
               ${isCooldown ? "🚫" : (sinal.direcao === "BUY" || sinal.direcao === "CALL" ? "🟢" : "🔴")}
@@ -101,7 +114,7 @@ async function carregarHistorico() {
             </span>
           </div>
           <div style="margin-top:4px; font-size:12px; color:#8c95b3;">
-            ${dataSinal} &nbsp; 
+            ${sinal.loteUtilizado ? `💳 Lote: <b>${sinal.loteUtilizado}</b> | ` : ""}${dataSinal} &nbsp; 
             ${dataObj ? dataObj.toLocaleTimeString("pt-BR", { timeZone: "America/Sao_Paulo" }).substring(0, 5) : "--:--"}
             ${!isCooldown ? ` | Qualidade: ${sinal.qualidade ?? "-"}%` : ""}
           </div>
@@ -130,9 +143,6 @@ async function carregarHistorico() {
                     RESULTADO: ${sinal.lucroEstimado >= 0 ? '+' : ''}$${sinal.lucroEstimado.toFixed(2)}
                   </div>
                 ` : ''}
-                <div style="margin-top:8px; font-size:12px; color:#8c95b3; border-top:1px solid rgba(255,255,255,0.1); padding-top:8px;">
-                  💳 Lote: <b>${sinal.loteUtilizado || '0.04'}</b>
-                </div>
               </div>
             ` : ''}
           </div>
@@ -190,46 +200,52 @@ async function carregarHistorico() {
 
     lista.innerHTML = finalHtml || '<div class="list-item">Nenhum sinal encontrado.</div>';
 
-    // Adicionar listeners de clique após renderizar
-    document.querySelectorAll('[data-sinal-id]').forEach(el => {
+    // Adicionar listeners de clique APÓS renderizar - BLINDADO
+    setTimeout(() => {
+      document.querySelectorAll('[data-sinal-id]').forEach(el => {
+        // Remover listeners antigos para evitar duplicação
+        el.onclick = null;
+        
         el.addEventListener('click', function(e) {
-            e.stopPropagation();
-            const sinalId = this.dataset.sinalId;
-            const detalheId = `detalhe-${sinalId}`;
-            const detalhe = document.getElementById(detalheId);
-            if (detalhe) {
-                const estaAberto = detalhe.style.display !== 'none';
-                detalhe.style.display = estaAberto ? 'none' : 'block';
-                
-                // Persistir estado
-                if (estaAberto) {
-                    removerSinalAberto(sinalId);
-                } else {
-                    salvarSinalAberto(sinalId);
-                }
+          e.stopPropagation();
+          const sinalId = this.dataset.sinalId;
+          const detalheId = `detalhe-${sinalId}`;
+          const detalhe = document.getElementById(detalheId);
+          
+          if (detalhe) {
+            const estaAberto = detalhe.style.display !== 'none';
+            detalhe.style.display = estaAberto ? 'none' : 'block';
+            
+            // Persistir estado IMEDIATAMENTE
+            if (estaAberto) {
+              removerSinalAberto(sinalId);
+            } else {
+              salvarSinalAberto(sinalId);
             }
-        });
-    });
+          }
+        }, { once: false });
+      });
+    }, 100);
 
     if (app.sinalParaDestacar) {
-        const el = document.getElementById(`sinal-${app.sinalParaDestacar}`);
-        if (el) {
-            el.scrollIntoView({ behavior: 'smooth', block: 'center' });
-            app.sinalParaDestacar = null;
-        }
+      const el = document.getElementById(`sinal-${app.sinalParaDestacar}`);
+      if (el) {
+        el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        app.sinalParaDestacar = null;
+      }
     }
 
     // Lógica do botão Minimizar Tudo
     const btnMinimizar = document.getElementById("btnMinimizarTudo");
     if (btnMinimizar) {
-        btnMinimizar.onclick = () => {
-            datasOrdenadas.forEach(data => {
-                const idData = data.replaceAll("/", "");
-                const el = document.getElementById(`data${idData}`);
-                if (el) el.style.display = "none";
-            });
-            localStorage.setItem('sinaisAbertos', JSON.stringify([]));
-        };
+      btnMinimizar.onclick = () => {
+        datasOrdenadas.forEach(data => {
+          const idData = data.replaceAll("/", "");
+          const el = document.getElementById(`data${idData}`);
+          if (el) el.style.display = "none";
+        });
+        localStorage.setItem('sinaisAbertos', JSON.stringify([]));
+      };
     }
 
   } catch (erro) {
@@ -238,7 +254,7 @@ async function carregarHistorico() {
   }
 }
 
-// Atualização automática a cada 5 segundos
+// Atualização automática a cada 5 segundos - PRESERVA ESTADO
 setInterval(() => {
   if (app.currentTab === "historico") {
     carregarHistorico();
