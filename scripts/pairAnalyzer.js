@@ -29,13 +29,18 @@ async function analisarPar({
         const rsiAtual =
             rsi(14, closes.slice(-15));
 
+        const ema200 =
+            ema(200, closes.slice(-250));
+
         let direcao = null;
 
-if (ema9 > ema21 && rsiAtual > 55)
-    direcao = "BUY";
+        // Regra de Ouro: Tendência Macro (EMA 200)
+        // Só compra se estiver ACIMA da 200. Só vende se estiver ABAIXO da 200.
+        if (ema9 > ema21 && rsiAtual > 55 && closes[closes.length - 1] > ema200)
+            direcao = "BUY";
 
-if (ema9 < ema21 && rsiAtual < 45)
-    direcao = "SELL";
+        if (ema9 < ema21 && rsiAtual < 45 && closes[closes.length - 1] < ema200)
+            direcao = "SELL";
 
 if (!direcao)
     return;
@@ -54,6 +59,8 @@ await salvarOperacao(db, {
     ema9,
 
     ema21,
+
+    ema200,
 
     rsi: rsiAtual,
 
