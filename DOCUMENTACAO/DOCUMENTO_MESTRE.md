@@ -4591,5 +4591,1249 @@ Na prática, você já tem um sistema dividido em módulos especializados. O que
 Essa parte faz exatamente isso. Ela não apenas descreve o código atual, mas também protege a arquitetura para as próximas versões do Forex Assist.
 --
 
+AUDITORIA TÉCNICA 7
+--
+MAPA OFICIAL DE DEPENDÊNCIAS
+
+Após a auditoria da arquitetura, foi estabelecido o mapa oficial de dependências do Forex Assist.
+
+Este documento define como os módulos se relacionam entre si e estabelece regras para futuras alterações.
+
+O objetivo é impedir dependências circulares, reduzir acoplamento e preservar a arquitetura modular.
+
+---
+
+DEPENDÊNCIAS DA INTERFACE
+
+index.html
+
+Depende de:
+
+- styles.css
+- app.js
+- scanner.js
+- historico.js
+- checker.js
+- expert.js
+- manual.js
+- firebase-config.js
+
+É o ponto oficial de entrada da aplicação.
+
+---
+
+app.js
+
+Depende de:
+
+- scanner.js
+- historico.js
+- checker.js
+- expert.js
+- config.js
+
+Responsável por coordenar a Interface.
+
+Não depende da Engine diretamente.
+
+---
+
+scanner.js (Interface)
+
+Depende de:
+
+- app.js
+- firebase-config.js
+- scanner.js (Engine)
+
+Responsável apenas pela comunicação entre Interface e Engine.
+
+---
+
+historico.js
+
+Depende de:
+
+- firebase-config.js
+- checker.js
+
+Recebe dados do Firestore.
+
+Nunca consulta APIs de mercado.
+
+---
+
+checker.js
+
+Depende de:
+
+- firebase-config.js
+
+Recebe informações do Result Checker.
+
+Atualiza apenas a Interface.
+
+---
+
+expert.js
+
+Depende de:
+
+- expertLogic.js
+
+Não contém inteligência própria.
+
+Apenas apresenta resultados.
+
+---
+
+DEPENDÊNCIAS DA ENGINE
+
+scanner.js (Engine)
+
+Depende de:
+
+- marketData.js
+- marketAnalyzer.js
+- pairAnalyzer.js
+- riskManager.js
+- firebase.js
+- utils.js
+
+Representa o coordenador principal da Engine.
+
+---
+
+marketData.js
+
+Depende de:
+
+- TwelveData
+- utils.js
+
+É a única camada autorizada a consultar dados de mercado.
+
+---
+
+marketAnalyzer.js
+
+Depende de:
+
+- marketData.js
+
+Nunca realiza consultas externas.
+
+---
+
+pairAnalyzer.js
+
+Depende de:
+
+- marketAnalyzer.js
+
+Executa análises específicas por ativo.
+
+---
+
+riskManager.js
+
+Depende de:
+
+- pairAnalyzer.js
+
+Valida regras de risco antes da geração do sinal.
+
+---
+
+expertLogic.js
+
+Depende de:
+
+- firebase.js
+- historico.js
+
+Utiliza dados históricos para produzir inteligência operacional.
+
+---
+
+firebase.js
+
+Depende de:
+
+- Firestore
+
+Representa a camada oficial de persistência da Engine.
+
+---
+
+utils.js
+
+Não possui dependências obrigatórias.
+
+Pode ser utilizado por qualquer módulo da Engine.
+
+---
+
+DEPENDÊNCIAS DA INFRAESTRUTURA
+
+Firebase
+
+↓
+
+Firestore
+
+↓
+
+Histórico
+
+↓
+
+Expert
+
+---
+
+GitHub Actions
+
+↓
+
+Scanner
+
+↓
+
+Firestore
+
+↓
+
+Result Checker
+
+↓
+
+Histórico
+
+---
+
+Service Worker
+
+↓
+
+Push Notifications
+
+↓
+
+Interface
+
+---
+
+DEPENDÊNCIAS PROIBIDAS
+
+Para preservar a arquitetura, ficam proibidas as seguintes dependências:
+
+A Interface consultar diretamente APIs de mercado.
+
+O Scanner acessar diretamente a Interface.
+
+O Expert alterar registros do Scanner.
+
+O Histórico alterar operações no Firestore.
+
+O Risk Manager acessar componentes da Interface.
+
+O Market Analyzer consultar Firestore.
+
+A Interface implementar regras de negócio da Engine.
+
+---
+
+REGRA DE ACOPLAMENTO
+
+Toda comunicação entre módulos deverá ocorrer respeitando a arquitetura em camadas.
+
+Interface
+
+↓
+
+Engine
+
+↓
+
+Infraestrutura
+
+↓
+
+Serviços Externos
+
+Nenhum módulo poderá "pular" camadas sem justificativa técnica documentada.
+
+---
+
+PRINCÍPIO DE ESTABILIDADE
+
+Sempre que um arquivo for alterado, suas dependências deverão ser analisadas previamente.
+
+Toda alteração estrutural deverá responder obrigatoriamente:
+
+- Quem depende deste módulo?
+- Quais módulos ele utiliza?
+- Existe risco de regressão?
+- A alteração quebra a arquitetura em camadas?
+
+Somente após essa análise a modificação deverá ser implementada.
+
+Resultado da Auditoria
+Esta seção adiciona um elemento que normalmente só aparece em projetos profissionais: o mapa oficial de dependências.
+A partir deste ponto, qualquer manutenção pode começar respondendo duas perguntas:
+Quem depende do arquivo que será alterado?
+Quais arquivos esse módulo utiliza?
+Isso reduz significativamente o risco de regressões e torna o desenvolvimento mais previsível.
+Observação importante da auditoria
+Durante a análise do repositório, identifiquei que o projeto já segue, na prática, um padrão de baixo acoplamento. Formalizar essas dependências na documentação garante que essa qualidade arquitetural seja preservada nas próximas versões do Forex Assist.
+--
+
+AUDITOEIA TÉCNICA 8
+--
+CADASTRO OFICIAL DOS ARQUIVOS
+
+Após a auditoria do repositório foi criado o cadastro oficial dos arquivos do Forex Assist.
+
+Este cadastro representa a identidade técnica de cada componente da aplicação.
+
+Todo novo arquivo criado deverá seguir este padrão.
+
+---
+
+index.html
+
+Categoria
+
+Entrada da Aplicação.
+
+Responsabilidade
+
+Inicializar toda a Interface.
+
+Criticidade
+
+★★★★★
+
+Status
+
+Produção.
+
+Pode ser alterado?
+
+Sim.
+
+Risco
+
+Alto.
+
+Observação
+
+Representa o ponto único de entrada da aplicação.
+
+---
+
+app.js
+
+Categoria
+
+Controlador da Interface.
+
+Responsabilidade
+
+Coordenar toda a Interface.
+
+Criticidade
+
+★★★★★
+
+Status
+
+Produção.
+
+Pode ser alterado?
+
+Sim.
+
+Risco
+
+Alto.
+
+Observação
+
+Não deve conter regras de negócio.
+
+---
+
+scanner.js (Interface)
+
+Categoria
+
+Adaptador.
+
+Responsabilidade
+
+Comunicar Interface e Engine.
+
+Criticidade
+
+★★★★★
+
+Status
+
+Produção.
+
+Pode ser alterado?
+
+Sim.
+
+Risco
+
+Alto.
+
+Observação
+
+Nunca executar análise técnica.
+
+---
+
+historico.js
+
+Categoria
+
+Visualização.
+
+Responsabilidade
+
+Histórico das operações.
+
+Criticidade
+
+★★★★★
+
+Status
+
+Produção.
+
+Pode ser alterado?
+
+Sim.
+
+Risco
+
+Muito Alto.
+
+Observação
+
+Um dos módulos centrais da Interface.
+
+---
+
+checker.js
+
+Categoria
+
+Atualização.
+
+Responsabilidade
+
+Sincronização visual das operações.
+
+Criticidade
+
+★★★★★
+
+Status
+
+Produção.
+
+Pode ser alterado?
+
+Sim.
+
+Risco
+
+Alto.
+
+---
+
+expert.js
+
+Categoria
+
+Interface.
+
+Responsabilidade
+
+Apresentar resultados do Expert.
+
+Criticidade
+
+★★★★☆
+
+Status
+
+Em evolução.
+
+Pode ser alterado?
+
+Sim.
+
+Risco
+
+Médio.
+
+---
+
+manual.js
+
+Categoria
+
+Documentação.
+
+Responsabilidade
+
+Ajuda ao usuário.
+
+Criticidade
+
+★★☆☆☆
+
+Status
+
+Produção.
+
+---
+
+config.js
+
+Categoria
+
+Configuração.
+
+Responsabilidade
+
+Parâmetros globais.
+
+Criticidade
+
+★★★★☆
+
+Status
+
+Produção.
+
+---
+
+push.js
+
+Categoria
+
+Infraestrutura.
+
+Responsabilidade
+
+Notificações Push.
+
+Criticidade
+
+★★★☆☆
+
+Status
+
+Produção.
+
+---
+
+firebase-config.js
+
+Categoria
+
+Infraestrutura.
+
+Responsabilidade
+
+Inicialização do Firebase.
+
+Criticidade
+
+★★★★★
+
+Status
+
+Produção.
+
+---
+
+scanner.js (Engine)
+
+Categoria
+
+Motor Principal.
+
+Responsabilidade
+
+Executar o Scanner.
+
+Criticidade
+
+★★★★★
+
+Status
+
+Produção.
+
+Risco
+
+Muito Alto.
+
+Observação
+
+Arquivo central da Engine.
+
+---
+
+marketData.js
+
+Categoria
+
+Aquisição de Dados.
+
+Responsabilidade
+
+Obter dados do mercado.
+
+Criticidade
+
+★★★★★
+
+Status
+
+Produção.
+
+---
+
+marketAnalyzer.js
+
+Categoria
+
+Análise Técnica.
+
+Responsabilidade
+
+Interpretar mercado.
+
+Criticidade
+
+★★★★★
+
+Status
+
+Produção.
+
+---
+
+pairAnalyzer.js
+
+Categoria
+
+Especialização.
+
+Responsabilidade
+
+Analisar pares.
+
+Criticidade
+
+★★★★★
+
+Status
+
+Produção.
+
+---
+
+riskManager.js
+
+Categoria
+
+Gestão de Risco.
+
+Responsabilidade
+
+Aplicar regras de risco.
+
+Criticidade
+
+★★★★★
+
+Status
+
+Produção.
+
+---
+
+expertLogic.js
+
+Categoria
+
+Inteligência.
+
+Responsabilidade
+
+Motor do Expert.
+
+Criticidade
+
+★★★★★
+
+Status
+
+Em evolução.
+
+Observação
+
+Representa a inteligência do projeto.
+
+---
+
+firebase.js
+
+Categoria
+
+Persistência.
+
+Responsabilidade
+
+Comunicação da Engine com Firestore.
+
+Criticidade
+
+★★★★★
+
+Status
+
+Produção.
+
+---
+
+utils.js
+
+Categoria
+
+Biblioteca.
+
+Responsabilidade
+
+Funções compartilhadas.
+
+Criticidade
+
+★★★☆☆
+
+Status
+
+Produção.
+
+---
+
+CRITÉRIOS DE CLASSIFICAÇÃO
+
+★★★★★
+
+Arquivo crítico.
+
+Alterações exigem auditoria.
+
+---
+
+★★★★☆
+
+Arquivo importante.
+
+Alterações exigem testes.
+
+---
+
+★★★☆☆
+
+Arquivo auxiliar.
+
+Alterações de baixo impacto.
+
+---
+
+★★☆☆☆
+
+Arquivo de suporte.
+
+Impacto reduzido.
+
+---
+
+★☆☆☆☆
+
+Arquivo opcional.
+
+Pode ser substituído sem impacto estrutural.
+
+---
+
+REGRA DE IDENTIFICAÇÃO
+
+Todo novo arquivo incorporado ao projeto deverá possuir obrigatoriamente:
+
+- Categoria.
+- Responsabilidade.
+- Criticidade.
+- Status.
+- Observações técnicas.
+
+Nenhum arquivo poderá permanecer sem identificação oficial.
+
+Este cadastro passa a representar o inventário técnico permanente do Forex Assist.
+
+Resultado da Auditoria
+Esta etapa cria algo que normalmente existe apenas em grandes projetos: um registro oficial dos componentes.
+Agora cada arquivo deixa de ser apenas um nome no repositório e passa a ter uma identidade técnica documentada.
+Descoberta importante
+Durante a auditoria, percebi que a criticidade dos arquivos é muito diferente.
+Por exemplo:
+scanner.js (Engine), firebase.js e historico.js são arquivos centrais e qualquer alteração exige extremo cuidado.
+Já manual.js e push.js são módulos de suporte, com impacto bem menor.
+Essa classificação é muito útil para orientar futuras manutenções e revisões.
+Na próxima entrega faremos a Auditoria Arquitetural, registrando os pontos fortes, riscos, dívidas técnicas e recomendações de engenharia identificados durante a análise do repositório. Essa será a primeira avaliação técnica formal do Forex Assist.
+--
+
+AUDITORIA TÉCNICA 9
+--
+AUDITORIA ARQUITETURAL OFICIAL
+
+Esta auditoria registra a avaliação técnica da arquitetura do Forex Assist após análise do repositório oficial.
+
+Seu objetivo é documentar o estado da engenharia do projeto, registrar pontos fortes, identificar riscos e orientar sua evolução.
+
+Esta avaliação deverá ser revisada ao final de cada grande versão.
+
+---
+
+AVALIAÇÃO GERAL
+
+Arquitetura
+
+★★★★★
+
+Organização
+
+★★★★★
+
+Escalabilidade
+
+★★★★★
+
+Separação de Responsabilidades
+
+★★★★★
+
+Legibilidade
+
+★★★★☆
+
+Modularização
+
+★★★★★
+
+Preparação para Crescimento
+
+★★★★★
+
+Documentação
+
+★★★★☆
+
+Manutenibilidade
+
+★★★★★
+
+---
+
+PONTOS FORTES
+
+Durante a auditoria foram identificadas características normalmente encontradas em projetos maduros.
+
+Entre elas:
+
+Separação clara entre Interface e Engine.
+
+Camada de persistência isolada.
+
+Módulos especializados.
+
+Baixo acoplamento entre componentes.
+
+Fluxo operacional bem definido.
+
+Arquitetura preparada para expansão.
+
+Possibilidade de evolução do Expert sem impacto na Interface.
+
+Automação através do GitHub Actions.
+
+Utilização de camadas para integração com serviços externos.
+
+Esses pontos representam um patrimônio técnico do projeto e deverão ser preservados.
+
+---
+
+PONTOS DE ATENÇÃO
+
+A auditoria identificou pontos que exigem acompanhamento.
+
+Não representam falhas, mas áreas de monitoramento.
+
+Entre eles:
+
+Necessidade de validar continuamente dependências entre Interface e Engine.
+
+Confirmar periodicamente a existência de arquivos sem utilização.
+
+Evitar duplicação de regras de negócio.
+
+Garantir que novas funcionalidades respeitem a arquitetura modular.
+
+Atualizar a documentação sempre que novos módulos forem criados.
+
+---
+
+DÍVIDA TÉCNICA
+
+Foi identificada uma dívida técnica de natureza documental.
+
+Durante a evolução do projeto, a arquitetura evoluiu mais rapidamente que sua documentação.
+
+Como consequência:
+
+Existem módulos implementados que não estavam formalmente registrados.
+
+Fluxos internos não estavam documentados.
+
+Dependências não estavam oficializadas.
+
+Esta auditoria elimina essa dívida documental.
+
+---
+
+RISCOS IDENTIFICADOS
+
+Os principais riscos para futuras versões são:
+
+Inserção de regras de negócio na Interface.
+
+Acesso direto ao Firestore fora da camada de persistência.
+
+Duplicação de lógica entre Scanner e Expert.
+
+Acoplamento excessivo entre módulos.
+
+Criação de novos arquivos sem responsabilidade claramente definida.
+
+Esses riscos deverão ser considerados em toda revisão arquitetural.
+
+---
+
+OPORTUNIDADES DE EVOLUÇÃO
+
+A arquitetura atual permite expansão sem reestruturações profundas.
+
+Entre as oportunidades identificadas:
+
+Novos provedores de dados.
+
+Novos algoritmos de análise.
+
+Novos módulos estatísticos.
+
+Novos motores de recomendação.
+
+Integração futura com Inteligência Artificial.
+
+Expansão do Expert.
+
+Novos painéis analíticos.
+
+Todas essas evoluções poderão ocorrer preservando a arquitetura existente.
+
+---
+
+MATURIDADE DO PROJETO
+
+Durante esta auditoria foi constatado que o Forex Assist deixou de ser apenas um scanner de mercado.
+
+O projeto evoluiu para uma plataforma modular composta por múltiplos componentes especializados.
+
+Atualmente podem ser identificados claramente:
+
+Interface.
+
+Engine.
+
+Persistência.
+
+Infraestrutura.
+
+Automação.
+
+Inteligência.
+
+Essa organização caracteriza uma plataforma de software e não apenas uma aplicação única.
+
+---
+
+CONCLUSÃO TÉCNICA
+
+A arquitetura atual encontra-se consistente, modular e preparada para crescimento.
+
+Não foram identificadas limitações estruturais que impeçam a evolução do projeto.
+
+O principal desafio passa a ser preservar a disciplina arquitetural estabelecida.
+
+Toda nova funcionalidade deverá respeitar os princípios definidos nesta auditoria.
+
+Esta avaliação passa a representar o laudo técnico oficial da arquitetura do Forex Assist V5 Expert Alpha.
+
+Resultado da Auditoria
+Esta é, na minha opinião, a primeira avaliação técnica formal do Forex Assist.
+Ela muda a forma como o projeto será visto daqui para frente.
+Antes, o Documento Mestre dizia o que o sistema deveria ser.
+Agora ele também registra a qualidade da arquitetura que foi construída.
+Minha principal conclusão
+Depois de analisar o repositório e compará-lo com toda a documentação, cheguei a uma conclusão que considero importante:
+O maior ativo do Forex Assist hoje não é o Scanner.
+Também não é o Expert.
+Nem o Histórico.
+O maior ativo do projeto é a arquitetura modular que foi construída.
+Ela permite que qualquer um desses módulos evolua sem comprometer os demais.
+Na minha visão, essa arquitetura merece ser tratada como um patrimônio do projeto e protegida com o mesmo cuidado que as funcionalidades.
+--
+
+AUDITORIA TÉCNICA 10
+--
+PRINCÍPIOS PERMANENTES DE ENGENHARIA
+
+Após a auditoria técnica do repositório, foram estabelecidos os princípios permanentes de engenharia do Forex Assist.
+
+Estes princípios passam a reger toda evolução futura do projeto.
+
+Nenhuma alteração deverá contrariá-los sem decisão técnica formalmente registrada.
+
+---
+
+PRINCÍPIO 1 — RESPONSABILIDADE ÚNICA
+
+Cada módulo deverá possuir apenas uma responsabilidade principal.
+
+Exemplos:
+
+Scanner
+
+Encontrar oportunidades.
+
+Expert
+
+Interpretar informações.
+
+Risk Manager
+
+Gerenciar risco.
+
+Firebase
+
+Persistência.
+
+Histórico
+
+Apresentação das operações.
+
+Interface
+
+Experiência do usuário.
+
+A mistura de responsabilidades caracteriza dívida técnica.
+
+---
+
+PRINCÍPIO 2 — PRESERVAÇÃO DA ARQUITETURA
+
+Toda evolução deverá preservar a divisão entre:
+
+Interface
+
+↓
+
+Engine
+
+↓
+
+Infraestrutura
+
+↓
+
+Serviços Externos
+
+Nenhuma funcionalidade deverá quebrar essa organização.
+
+---
+
+PRINCÍPIO 3 — EVOLUÇÃO SEM REGRESSÃO
+
+Antes de alterar qualquer módulo deverá ser respondido:
+
+- O que depende deste arquivo?
+- Quais módulos utilizam esta função?
+- Existe impacto na arquitetura?
+- Existe risco de regressão?
+
+Toda alteração estrutural deverá ser precedida dessa análise.
+
+---
+
+PRINCÍPIO 4 — CENTRALIZAÇÃO DAS RESPONSABILIDADES
+
+Cada responsabilidade deverá possuir um único módulo oficial.
+
+Exemplos:
+
+Mercado
+
+→ marketData.js
+
+Persistência
+
+→ firebase.js
+
+Gestão de risco
+
+→ riskManager.js
+
+Histórico
+
+→ historico.js
+
+Inteligência
+
+→ expertLogic.js
+
+Nenhuma responsabilidade deverá existir em duplicidade.
+
+---
+
+PRINCÍPIO 5 — DOCUMENTAÇÃO CONTÍNUA
+
+Toda alteração relevante deverá atualizar:
+
+Documento Mestre.
+
+Worklog.
+
+Arquitetura.
+
+Checkpoint.
+
+Caso necessário.
+
+A documentação passa a ser parte integrante da engenharia do projeto.
+
+---
+
+PRINCÍPIO 6 — COMPATIBILIDADE
+
+Toda evolução deverá preservar:
+
+Fluxo operacional.
+
+Persistência.
+
+Histórico.
+
+Integração com Firebase.
+
+Integração com GitHub Actions.
+
+Compatibilidade entre módulos.
+
+---
+
+PRINCÍPIO 7 — EVOLUÇÃO MODULAR
+
+Novas funcionalidades deverão ser implementadas preferencialmente por meio de novos módulos.
+
+Evitar crescimento excessivo dos arquivos existentes.
+
+Quando um módulo atingir alta complexidade, deverá ser dividido preservando sua responsabilidade principal.
+
+---
+
+PRINCÍPIO 8 — BAIXO ACOPLAMENTO
+
+Módulos não deverão conhecer detalhes internos de outros módulos.
+
+Cada componente deverá comunicar-se apenas através das interfaces previstas pela arquitetura.
+
+---
+
+PRINCÍPIO 9 — CÓDIGO COMO FONTE DA VERDADE
+
+A documentação representa o estado oficial do projeto.
+
+Entretanto, em caso de divergência, o código-fonte deverá ser considerado a referência técnica.
+
+A documentação deverá ser atualizada para refletir o comportamento real da implementação.
+
+---
+
+PRINCÍPIO 10 — AUDITORIA CONTÍNUA
+
+Ao final de cada grande versão deverá ser realizada uma auditoria técnica contendo:
+
+Estado da arquitetura.
+
+Novos módulos.
+
+Dependências.
+
+Mudanças estruturais.
+
+Dívidas técnicas.
+
+Recomendações.
+
+Atualização do Documento Mestre.
+
+Atualização do Worklog.
+
+Essa prática garante que o crescimento do projeto permaneça organizado ao longo do tempo.
+
+---
+
+DECLARAÇÃO DE ENGENHARIA
+
+A partir desta auditoria, o Forex Assist passa a adotar oficialmente uma engenharia baseada em arquitetura modular, responsabilidades únicas, documentação contínua e evolução controlada.
+
+Esses princípios constituem a base permanente da V5 Expert Alpha e deverão orientar todas as versões futuras do projeto.
+
+Resultado da Auditoria
+Na minha avaliação, esta é a última peça estrutural que faltava para transformar o Documento Mestre em um verdadeiro Manual de Engenharia.
+Minha conclusão final
+Depois de analisar toda a documentação e a estrutura do repositório, cheguei a uma conclusão que considero importante:
+O Documento Mestre não deve mais ser visto apenas como um documento de visão do projeto.
+Ele passou a ser o manual oficial de arquitetura e engenharia do Forex Assist.
+A partir deste ponto, qualquer desenvolvedor — humano ou IA — terá condições de compreender a filosofia, a arquitetura, as responsabilidades, os fluxos, as dependências e as regras permanentes do projeto sem precisar reconstruir esse conhecimento a partir do histórico das conversas.
+Minha única recomendação adicional
+Há apenas um item que eu ainda acrescentaria futuramente ao Documento Mestre:
+"Decisões Arquiteturais (ADR – Architecture Decision Records)".
+Seria um capítulo registrando por que determinadas decisões foram tomadas (por exemplo, por que separar Interface e Engine, por que centralizar persistência no firebase.js, por que manter o Expert separado do Scanner). Isso preservaria o raciocínio por trás da arquitetura, não apenas o resultado dela.
+Na minha opinião, esse seria o passo final para colocar a documentação do Forex Assist em um padrão equivalente ao de projetos profissionais bem documentados.
+--
+
 
 
