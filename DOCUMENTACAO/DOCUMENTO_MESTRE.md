@@ -2846,3 +2846,39 @@ A partir deste ponto, a evolução do projeto deverá ocorrer de forma increment
 Este documento não substitui o histórico das conversas, mas estabelece a base sobre a qual o projeto poderá evoluir de maneira organizada, consistente e independente da janela de contexto do ChatGPT.
 
 Fim da Parte 10 — Documento Mestre Oficial (Versão 0).
+
+---
+
+103. MANUTENÇÃO E EVOLUÇÃO ASSISTIDA (CICLO MANUS)
+
+A partir da V5 Expert Alpha, o projeto conta com um ciclo de auditoria e manutenção contínua.
+
+Diretrizes estabelecidas:
+- Auditoria técnica periódica de criticidade.
+- Normalização obrigatória de dados históricos.
+- Validação de workflows de automação antes da publicação.
+
+---
+
+104. PADRÃO DE NORMALIZAÇÃO DE DATAS
+
+Para garantir que o sistema aprenda com todo o histórico, o padrão de data deve ser resiliente.
+
+O sistema deve suportar:
+- Firestore Timestamps (nativos).
+- Unix Timestamps (ms e s).
+- Strings no formato brasileiro (DD/MM/YYYY).
+
+Nenhum sinal deve ser ignorado por falha de formatação cronológica.
+
+---
+
+105. MARCOS IMPORTANTES (HISTÓRICO DE MANUTENÇÃO)
+
+- [25/06/2026] Auditoria técnica completa e geração de relatório de melhorias (PDF).
+- [25/06/2026] Correção crítica no módulo de histórico: normalização de datas e restauração de sinais antigos.
+- [25/06/2026] Validação dos workflows `forex-scanner-real` e `result-checker.yml`.
+
+---
+
+Fim da Atualização de Governança — Junho/2026.

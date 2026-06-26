@@ -1583,3 +1583,60 @@ As próximas partes do Worklog deverão registrar apenas novas evoluções, func
 ---
 
 
+
+---
+
+PARTE 6 — Auditoria Técnica e Refinamento do Histórico
+
+---
+
+Fase 3 — Estabilização e Governança (Ciclo Manus)
+
+Após a consolidação da V5 Expert Alpha, o projeto passou por uma auditoria técnica profunda para garantir a prontidão para operações com capital real.
+
+O foco desta fase foi identificar gargalos de risco, segurança de credenciais e inconsistências na apresentação dos dados históricos, que são a base da inteligência do sistema.
+
+---
+
+Análise de Criticidade e Backlog
+
+Foi realizada uma análise técnica completa do repositório, resultando em um relatório de melhorias priorizadas.
+
+Os principais pontos identificados foram:
+- Necessidade de gestão de risco real (TP/SL) dentro da janela de verificação;
+- Proteção de credenciais sensíveis (serviceAccount.json);
+- Normalização de dados para o módulo Expert.
+
+Esta análise serviu como bússola para as correções imediatas.
+
+---
+
+Correção e Normalização do Histórico
+
+Foi identificado um problema crítico na visualização do histórico: sinais antigos deixaram de aparecer devido a mudanças no formato de armazenamento das datas (transição entre timestamps numéricos e strings).
+
+Ações realizadas:
+- Implementação de uma lógica de normalização universal no `historico.js`;
+- Suporte a Timestamps Firestore, milissegundos, segundos e strings (DD/MM/YYYY);
+- Substituição do agrupamento relativo ("Ontem") por agrupamento absoluto por data;
+- Aumento do limite de busca para 300 registros, garantindo a recuperação do legado.
+
+Esta correção restaurou a visibilidade completa da performance do sistema.
+
+---
+
+Auditoria de Workflows do GitHub
+
+Foram analisados os novos arquivos de automação:
+- `forex-scanner-real`: Responsável pela execução periódica do scanner (cron 5min);
+- `result-checker.yml`: Responsável pela finalização das operações pendentes.
+
+A análise confirmou que os workflows estão alinhados com a estrutura de segredos (secrets) e dependências do projeto, garantindo a execução autônoma do motor operacional.
+
+---
+
+MARCO IMPORTANTE: Restauração da Integridade do Histórico
+
+Com a confirmação do administrador, a correção do histórico foi publicada no repositório oficial, marcando o primeiro passo de manutenção assistida pela Manus AI, preservando a filosofia de "Dados acima de Opinião".
+
+---
