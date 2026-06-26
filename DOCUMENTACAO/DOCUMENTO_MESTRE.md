@@ -2984,3 +2984,29 @@ Esta regra sobrepõe qualquer sinal técnico positivo (EMA/RSI).
 - [25/06/2026] Implementação do Veto por Drawdown e Dashboard de Quarentena.
 
 ---
+
+---
+
+116. DIRETRIZES FINANCEIRAS E ALVOS (TP/SL)
+
+O sistema deve operar com alvos financeiros pré-definidos para validação de performance real.
+
+Parâmetros Atuais (Padrão):
+- Lote: 0.04
+- Alvo Financeiro (TP/SL): $5.00
+- Distância em Pips: 12.5 pips
+
+Regras de Fechamento:
+- WIN: Movimentação favorável >= 12.5 pips.
+- LOSS: Movimentação contrária >= 12.5 pips.
+- PENDENTE: Sinais que ainda não atingiram nenhum dos dois extremos.
+
+A interface deve exibir o valor em USD correspondente à movimentação de pips.
+
+---
+
+117. MARCOS IMPORTANTES (MODELO FINANCEIRO)
+
+- [25/06/2026] Implementação de alvos fixos de $5.00 (12.5 pips) e exibição financeira no histórico.
+
+---

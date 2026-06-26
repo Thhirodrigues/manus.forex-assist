@@ -1778,3 +1778,29 @@ MARCO IMPORTANTE: Inteligência de Gestão de Drawdown Ativada
 A atualização foi publicada. O Forex Assist agora possui um "Cérebro" que veta sinais técnicos baseando-se na realidade estatística do dia.
 
 ---
+
+---
+
+Fase 9 — Transição para Modelo Financeiro Real
+
+O sistema deixou de usar apenas a direção do preço para adotar alvos financeiros reais de Take Profit (TP) e Stop Loss (SL).
+
+---
+
+Implementação de Alvos Financeiros ($5.00 / Lote 0.04)
+
+Ações realizadas:
+- Reconfiguração do `checker.js`: O critério de WIN/LOSS agora exige um movimento de 12.5 pips (equivalente a $5.00 com lote 0.04);
+- Sinais que não atingem o alvo de 12.5 pips permanecem em "PENDENTE" até que o mercado se decida;
+- Atualização da Interface: O Histórico agora exibe o lucro/prejuízo estimado em dólares ($) e o lote utilizado;
+- Registro de Dados: Preço de entrada e saída agora são usados para calcular o financeiro exato da operação.
+
+Esta mudança alinha o Forex Assist com a realidade operacional de uma conta real, buscando alvos fixos de ganho e perda.
+
+---
+
+MARCO IMPORTANTE: Operacional Financeiro Ativado
+
+O sistema agora analisa e reporta resultados baseados em dólares e pips fixos, preparando o terreno para a futura configuração dinâmica pelo usuário.
+
+---
