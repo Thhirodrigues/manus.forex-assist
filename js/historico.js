@@ -61,8 +61,10 @@ async function carregarHistorico() {
       const isCooldown = sinal.status === "COOLDOWN" || sinal.origem === "cooldown";
 
       const isDestaque = app.sinalParaDestacar === doc.id;
+      const detalheId = `detalhe-${doc.id}`;
+      const borderStyle = isDestaque ? 'border: 2px solid #00ff88; background: rgba(0, 255, 136, 0.1);' : '';
       const card = `
-        <div class="list-item" id="sinal-${doc.id}" style="${isDestaque ? 'border: 2px solid #00ff88; background: rgba(0, 255, 136, 0.1);' : ''} cursor:pointer;" onclick="const d = document.getElementById('detalhe-${doc.id}'); d.style.display = d.style.display === 'none' ? 'block' : 'none';">
+        <div class="list-item" id="sinal-${doc.id}" style="${borderStyle} cursor:pointer;" data-sinal-id="${doc.id}">
           <div style="display:flex; justify-content:space-between; align-items:center; font-size:14px; font-weight:bold;">
             <span>
               ${isCooldown ? "🚫" : (sinal.direcao === "BUY" || sinal.direcao === "CALL" ? "🟢" : "🔴")}
@@ -79,8 +81,13 @@ async function carregarHistorico() {
             ${dataObj ? dataObj.toLocaleTimeString("pt-BR", { timeZone: "America/Sao_Paulo" }).substring(0, 5) : "--:--"}
             ${!isCooldown ? ` | Qualidade: ${sinal.qualidade ?? "-"}%` : ""}
           </div>
+          ${sinal.movimentoPips !== undefined ? `
+            <div style="margin-top:6px; font-size:12px; color:${sinal.resultado === 'WIN' ? '#00ff88' : '#ff4444'}; font-weight:bold;">
+              📊 Movimentação: ${sinal.movimentoPips > 0 ? '+' : ''}${sinal.movimentoPips} pips
+            </div>
+          ` : ''}
           
-          <div id="detalhe-${doc.id}" style="display: ${isDestaque ? 'block' : 'none'}; margin-top:10px; padding-top:10px; border-top:1px solid rgba(255,255,255,0.1); font-size:12px; color:#8c95b3;">
+          <div id="${detalheId}" style="display: ${isDestaque ? 'block' : 'none'}; margin-top:10px; padding-top:10px; border-top:1px solid rgba(255,255,255,0.1); font-size:12px; color:#8c95b3;">
             <div style="display:grid; grid-template-columns: 1fr 1fr; gap:8px;">
               <div>📉 RSI: <b>${sinal.rsi ? Number(sinal.rsi).toFixed(2) : '-'}</b></div>
               <div>📊 EMA 9: <b>${sinal.ema9 ? Number(sinal.ema9).toFixed(5) : '-'}</b></div>
@@ -149,6 +156,17 @@ async function carregarHistorico() {
 
     lista.innerHTML = finalHtml || '<div class="list-item">Nenhum sinal encontrado.</div>';
 
+    // Adicionar listeners de clique após renderizar
+    document.querySelectorAll('[data-sinal-id]').forEach(el => {
+        el.addEventListener('click', function() {
+            const detalheId = `detalhe-${this.dataset.sinalId}`;
+            const detalhe = document.getElementById(detalheId);
+            if (detalhe) {
+                detalhe.style.display = detalhe.style.display === 'none' ? 'block' : 'none';
+            }
+        });
+    });
+
     if (app.sinalParaDestacar) {
         const el = document.getElementById(`sinal-${app.sinalParaDestacar}`);
         if (el) {
@@ -158,16 +176,26 @@ async function carregarHistorico() {
     }
 
     // Lógica do botão Minimizar Tudo
-    document.getElementById("btnMinimizarTudo").onclick = () => {
-      datasOrdenadas.forEach(data => {
-          const idData = data.replaceAll("/", "");
-          const el = document.getElementById(`data${idData}`);
-          if (el) el.style.display = "none";
-      });
-    };
+    const btnMinimizar = document.getElementById("btnMinimizarTudo");
+    if (btnMinimizar) {
+        btnMinimizar.onclick = () => {
+            datasOrdenadas.forEach(data => {
+                const idData = data.replaceAll("/", "");
+                const el = document.getElementById(`data${idData}`);
+                if (el) el.style.display = "none";
+            });
+        };
+    }
 
   } catch (erro) {
     console.error("Erro histórico:", erro);
     lista.innerHTML = `<div class="list-item">Erro ao carregar histórico: ${erro.message}</div>`;
   }
 }
+
+// Atualização automática a cada 5 segundos
+setInterval(() => {
+  if (app.currentTab === "historico") {
+    carregarHistorico();
+  }
+}, 5000);
