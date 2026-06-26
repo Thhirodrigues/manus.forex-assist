@@ -1752,3 +1752,29 @@ MARCO IMPORTANTE: Interface Estável e Responsiva
 A persistência de estado marca a transição de um sistema reativo para um sistema responsivo, onde a interface se adapta ao comportamento do usuário sem perdas de contexto.
 
 ---
+
+---
+
+Fase 8 — Ativação do Cérebro Expert (Veto por Drawdown)
+
+O projeto atingiu um novo patamar de inteligência, onde o sistema agora avalia sua própria performance antes de decidir operar.
+
+---
+
+Inteligência de Veto por Performance
+
+Ações realizadas:
+- Criação do módulo `expertLogic.js` para análise de sequências de perda;
+- Implementação da trava de "3 LOSS seguidos": Se um par atingir este limite nas últimas 24h, ele é automaticamente bloqueado;
+- Integração do veto no `scanner.js`: O motor de análise agora consulta o Expert antes de autorizar qualquer entrada técnica;
+- Dashboard de Quarentena: Adicionada uma nova seção na interface que lista em tempo real quais pares estão bloqueados e o motivo.
+
+Este mecanismo protege a banca contra ciclos de mercado desfavoráveis para a estratégia atual, impedindo que o sistema "insista" em ativos que não estão performando.
+
+---
+
+MARCO IMPORTANTE: Inteligência de Gestão de Drawdown Ativada
+
+A atualização foi publicada. O Forex Assist agora possui um "Cérebro" que veta sinais técnicos baseando-se na realidade estatística do dia.
+
+---

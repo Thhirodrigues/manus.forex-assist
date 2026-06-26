@@ -2963,3 +2963,24 @@ Diretrizes:
 - [25/06/2026] Implementação de persistência de estado para cartões expandidos com localStorage.
 
 ---
+
+---
+
+114. INTELIGÊNCIA DE VETO POR DRAWDOWN
+
+O Expert deve atuar como um filtro de performance sobre o Scanner.
+
+Regras de Veto:
+- Limite de Perda: Máximo de 3 LOSS seguidos por par nas últimas 24 horas.
+- Bloqueio Automático: Ao atingir o limite, o Scanner é proibido de emitir novos sinais para o par em questão.
+- Quarentena: Pares vetados devem ser exibidos na Dashboard com o motivo do bloqueio para transparência do operador.
+
+Esta regra sobrepõe qualquer sinal técnico positivo (EMA/RSI).
+
+---
+
+115. MARCOS IMPORTANTES (INTELIGÊNCIA EXPERT)
+
+- [25/06/2026] Implementação do Veto por Drawdown e Dashboard de Quarentena.
+
+---
