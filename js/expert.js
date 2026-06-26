@@ -19,11 +19,6 @@ function dashboardView() {
     </div>
 
     <div class="card">
-        <div class="card-title">Cooldowns Hoje</div>
-        <div id="cooldownsHoje" class="big-number">0</div>
-    </div>
-
-    <div class="card">
         <div class="card-title">Qualidade do Mercado</div>
         <div id="ultimaAnalise" class="signal wait">
             Aguardando análise...
@@ -38,7 +33,14 @@ function dashboardView() {
     </div>
 
     <div class="card">
-        <div class="card-title">Quarentena Expert (Vetos)</div>
+        <div class="card-title">Cooldowns (30 min)</div>
+        <div id="cooldownsHoje" style="font-size:12px; color:#ff9800;">
+            0 sinais ignorados
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="card-title">Quarentena Expert (Veto)</div>
         <div id="expertQuarentena" style="font-size:12px; color:#ff4444; max-height:150px; overflow-y:auto;">
             Nenhum par bloqueado.
         </div>
