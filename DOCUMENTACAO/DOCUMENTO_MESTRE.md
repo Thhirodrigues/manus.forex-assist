@@ -2922,3 +2922,25 @@ Diretrizes de Interface:
 - [25/06/2026] Implementação da navegação Dashboard -> Histórico com destaque de sinal e exibição de pips.
 
 ---
+
+---
+
+110. PADRÃO DE AUDITORIA TÉCNICA (CAIXA PRETA)
+
+Todo sinal gerado deve ser acompanhado de sua "foto técnica" no momento da entrada.
+
+Requisitos de Dados:
+- Persistência obrigatória de: RSI, EMA 9, EMA 21 e EMA 200.
+- Exibição de Preço de Entrada e Preço de Fechamento.
+- Cálculo e exibição da variação final em PIPS.
+
+Requisitos de Interface:
+- Sistema de Expansão (Accordion): O histórico deve iniciar de forma compacta, permitindo a expansão detalhada de cada sinal mediante clique para análise técnica profunda.
+
+---
+
+111. MARCOS IMPORTANTES (TRANSPARÊNCIA)
+
+- [25/06/2026] Implementação do sistema de auditoria detalhada com expansão de cartões e registro de indicadores técnicos.
+
+---

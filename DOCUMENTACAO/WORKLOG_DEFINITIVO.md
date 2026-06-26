@@ -1696,3 +1696,31 @@ MARCO IMPORTANTE: Conexão Dashboard-Histórico e Auditoria de Pips
 A funcionalidade foi publicada e testada. Agora o Forex Assist oferece uma jornada fluida desde a detecção do sinal até a análise detalhada do seu resultado técnico.
 
 ---
+
+---
+
+Fase 6 — Transparência Técnica e Auditoria de Confluência
+
+Para elevar o nível de confiança do operador, o sistema passou a expor as vísceras de cada decisão tomada pelo algoritmo.
+
+---
+
+Detalhamento de Indicadores e Sistema de Expansão
+
+Ações realizadas:
+- Upgrade no `pairAnalyzer.js` para persistir os valores exatos de EMA 9, EMA 21, EMA 200 e RSI no momento do disparo;
+- Implementação de interface interativa no `historico.js` (clique para expandir/minimizar);
+- Exibição técnica detalhada:
+    - Valores dos indicadores no momento da entrada;
+    - Comparativo de Preço de Entrada vs. Preço de Saída;
+    - Destaque colorido para a variação final em Pips.
+
+Este nível de detalhamento permite ao operador entender exatamente qual indicador foi o gatilho e como o preço se comportou até o TP/SL.
+
+---
+
+MARCO IMPORTANTE: Auditoria de Confluência Ativada
+
+O sistema agora funciona como uma "caixa preta" de avião, registrando e permitindo a consulta expansível de todos os dados técnicos de cada operação.
+
+---
