@@ -1831,3 +1831,39 @@ MARCO IMPORTANTE: Interface Clarificada e Hierarquizada
 A organização visual agora reflete a lógica técnica do sistema, permitindo que o operador compreenda rapidamente por que um sinal foi ou não emitido.
 
 ---
+DECISÃO OFICIAL DE ENGENHARIA — FLUXO DE DESENVOLVIMENTO
+
+Data: 26/06/2026
+
+Objetivo
+
+Eliminar retrabalho, reduzir riscos de regressão e garantir entregas contínuas até a conclusão do Forex Assist.
+
+Método Oficial
+
+Trabalhar sempre em um arquivo por vez.
+A IA recebe o arquivo completo atual.
+A IA realiza toda a alteração necessária no arquivo.
+A IA devolve o arquivo completo.
+Se o arquivo ultrapassar o limite de uma resposta, ele será dividido em partes sequenciais e contínuas, sem instruções de edição manual.
+O usuário apenas substitui o arquivo pelo novo conteúdo.
+Somente após concluir e validar esse arquivo inicia-se o próximo.
+Regras Obrigatórias
+
+Não realizar alterações parciais quando elas dependerem de código ainda não entregue.
+Não enviar funções incompletas.
+Não solicitar substituições manuais complexas.
+Cada entrega deve preservar 100% do comportamento existente, salvo quando houver alteração previamente aprovada.
+Cada etapa deve terminar com um arquivo utilizável.
+Ordem de Trabalho
+
+Receber arquivo.
+Refatorar.
+Entregar arquivo completo (ou em partes contínuas).
+Validar funcionamento.
+Registrar no Worklog.
+Prosseguir para o próximo arquivo.
+Objetivo Final
+
+Concluir o Forex Assist dentro do prazo estabelecido, reduzindo retrabalho e mantendo uma linha contínua de desenvolvimento.
+---
