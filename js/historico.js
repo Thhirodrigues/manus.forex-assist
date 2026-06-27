@@ -10,7 +10,7 @@ function historicoView() {
   `;
 }
 
-// Gerenciar estado de sinais abertos com persistência blindada
+// Gerenciar estado de sinais abertos
 function obterSinaisAbertos() {
   try {
     const stored = localStorage.getItem('sinaisAbertos');
@@ -46,6 +46,42 @@ function removerSinalAberto(sinalId) {
   }
 }
 
+// Gerenciar estado de grupos de datas (aberto/fechado)
+function obterGruposAbertos() {
+  try {
+    const stored = localStorage.getItem('gruposAbertos');
+    return stored ? JSON.parse(stored) : [];
+  } catch (e) {
+    console.error("Erro ao obter grupos abertos:", e);
+    return [];
+  }
+}
+
+function salvarGrupoAberto(dataId) {
+  try {
+    const abertos = obterGruposAbertos();
+    if (!abertos.includes(dataId)) {
+      abertos.push(dataId);
+      localStorage.setItem('gruposAbertos', JSON.stringify(abertos));
+    }
+  } catch (e) {
+    console.error("Erro ao salvar grupo aberto:", e);
+  }
+}
+
+function removerGrupoAberto(dataId) {
+  try {
+    const abertos = obterGruposAbertos();
+    const index = abertos.indexOf(dataId);
+    if (index > -1) {
+      abertos.splice(index, 1);
+      localStorage.setItem('gruposAbertos', JSON.stringify(abertos));
+    }
+  } catch (e) {
+    console.error("Erro ao remover grupo aberto:", e);
+  }
+}
+
 async function carregarHistorico() {
   const lista = document.getElementById("historicoLista");
   const stats = document.getElementById("historicoStats");
@@ -64,6 +100,7 @@ async function carregarHistorico() {
 
     const hojeStr = new Date().toLocaleDateString("pt-BR", { timeZone: "America/Sao_Paulo" });
     const sinaisAbertos = obterSinaisAbertos();
+    const gruposAbertos = obterGruposAbertos();
 
     snapshot.forEach((doc) => {
       const sinal = doc.data();
@@ -113,8 +150,11 @@ async function carregarHistorico() {
               ${isCooldown ? "COOLDOWN" : (sinal.resultado === "WIN" ? "✅ WIN" : sinal.resultado === "LOSS" ? "❌ LOSS" : "⏳ PENDENTE")}
             </span>
           </div>
+          <div style="margin-top:4px; font-size:12px; color:#00ff88; font-weight:bold;">
+            💳 Lote: <b>${sinal.loteUtilizado || '0.04'}</b>
+          </div>
           <div style="margin-top:4px; font-size:12px; color:#8c95b3;">
-            ${sinal.loteUtilizado ? `💳 Lote: <b>${sinal.loteUtilizado}</b> | ` : ""}${dataSinal} &nbsp; 
+            ${dataSinal} &nbsp; 
             ${dataObj ? dataObj.toLocaleTimeString("pt-BR", { timeZone: "America/Sao_Paulo" }).substring(0, 5) : "--:--"}
             ${!isCooldown ? ` | Qualidade: ${sinal.qualidade ?? "-"}%` : ""}
           </div>
@@ -184,11 +224,14 @@ async function carregarHistorico() {
       const isHoje = data === hojeStr;
       const label = isHoje ? `HOJE (${data})` : data;
 
+      // Verificar se há sinal destacado neste grupo
       const temSinalDestacado = app.sinalParaDestacar && gruposPorData[data].includes(`id="sinal-${app.sinalParaDestacar}"`);
-      const mostrarGrupo = isHoje || temSinalDestacado;
+      
+      // Mostrar grupo se: é hoje, tem sinal destacado, ou está na lista de grupos abertos
+      const mostrarGrupo = isHoje || temSinalDestacado || gruposAbertos.includes(idData);
 
       finalHtml += `
-        <div onclick="const el = document.getElementById('data${idData}'); el.style.display = el.style.display === 'none' ? 'block' : 'none';" 
+        <div class="grupo-data" data-grupo-id="${idData}" onclick="toggleGrupo('${idData}'); event.stopPropagation();" 
              style="margin-top:20px; margin-bottom:10px; font-size:12px; color:#8c95b3; font-weight:bold; cursor:pointer; display:flex; align-items:center;">
           <span style="margin-right:8px;">${mostrarGrupo ? "▼" : "▶"}</span> ${label}
         </div>
@@ -200,10 +243,9 @@ async function carregarHistorico() {
 
     lista.innerHTML = finalHtml || '<div class="list-item">Nenhum sinal encontrado.</div>';
 
-    // Adicionar listeners de clique APÓS renderizar - BLINDADO
+    // Adicionar listeners de clique para sinais
     setTimeout(() => {
       document.querySelectorAll('[data-sinal-id]').forEach(el => {
-        // Remover listeners antigos para evitar duplicação
         el.onclick = null;
         
         el.addEventListener('click', function(e) {
@@ -216,7 +258,6 @@ async function carregarHistorico() {
             const estaAberto = detalhe.style.display !== 'none';
             detalhe.style.display = estaAberto ? 'none' : 'block';
             
-            // Persistir estado IMEDIATAMENTE
             if (estaAberto) {
               removerSinalAberto(sinalId);
             } else {
@@ -244,6 +285,7 @@ async function carregarHistorico() {
           const el = document.getElementById(`data${idData}`);
           if (el) el.style.display = "none";
         });
+        localStorage.setItem('gruposAbertos', JSON.stringify([]));
         localStorage.setItem('sinaisAbertos', JSON.stringify([]));
       };
     }
@@ -253,6 +295,21 @@ async function carregarHistorico() {
     lista.innerHTML = `<div class="list-item">Erro ao carregar histórico: ${erro.message}</div>`;
   }
 }
+
+// Função global para toggle de grupos
+window.toggleGrupo = function(dataId) {
+  const el = document.getElementById(`data${dataId}`);
+  if (el) {
+    const estaAberto = el.style.display !== 'none';
+    el.style.display = estaAberto ? 'none' : 'block';
+    
+    if (estaAberto) {
+      removerGrupoAberto(dataId);
+    } else {
+      salvarGrupoAberto(dataId);
+    }
+  }
+};
 
 // Atualização automática a cada 5 segundos - PRESERVA ESTADO
 setInterval(() => {
