@@ -2113,3 +2113,29 @@ Na minha opinião, essa é a forma correta de consolidar o Forex Assist para que
 
 -------
 
+
+---
+
+Fase 11 — Integridade de Dados Históricos
+
+Com a transição para o modelo financeiro de $5.00 (lote 0.04), foi necessário garantir que apenas os sinais que efetivamente utilizaram essa configuração exibissem o lote e o resultado em dólares.
+
+---
+
+Filtro de Integridade: Lote e Resultado Financeiro
+
+Ações realizadas:
+- **Regra de Exibição:** O campo "💳 Lote" agora só aparece em sinais que possuem o registro `loteUtilizado` no banco de dados;
+- **Resultado Financeiro:** A exibição em dólares (RESULTADO: +$X.XX) também é condicionada à presença do `loteUtilizado`;
+- **Sinais Antigos Protegidos:** Sinais anteriores à implementação do modelo financeiro permanecem sem essas informações, mantendo a integridade histórica;
+- **Auditoria Limpa:** Cada sinal agora exibe apenas as informações que realmente o descrevem, evitando confusão operacional.
+
+Esta mudança garante que o histórico seja uma fonte confiável de verdade sobre cada operação realizada.
+
+---
+
+MARCO IMPORTANTE: Integridade de Dados Históricos Garantida
+
+Os sinais antigos e novos agora convivem harmoniosamente no histórico, cada um com suas informações corretas.
+
+---

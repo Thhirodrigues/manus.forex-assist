@@ -6546,3 +6546,24 @@ A evolução do Forex Assist deverá ser guiada pela engenharia, e não apenas p
 
 
 
+
+---
+
+120. INTEGRIDADE DE DADOS HISTÓRICOS
+
+O histórico deve ser uma fonte confiável de verdade sobre cada operação realizada.
+
+Regra de Exibição de Informações Financeiras:
+- Lote: Exibir apenas se o sinal possui o campo `loteUtilizado` registrado.
+- Resultado em USD: Exibir apenas se o sinal possui `lucroEstimado` registrado.
+- Variação de Pips: Exibir apenas se o sinal possui `movimentoPips` e `loteUtilizado` registrados.
+
+Justificativa: Sinais antigos (anteriores à implementação do modelo financeiro) não devem exibir informações que não foram registradas no momento de sua execução, evitando confusão operacional.
+
+---
+
+121. MARCOS IMPORTANTES (INTEGRIDADE DE DADOS)
+
+- [25/06/2026] Implementação de filtro de integridade: Lote e resultado financeiro exibidos apenas em sinais com registro completo.
+
+---
