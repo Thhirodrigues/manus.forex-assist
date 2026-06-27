@@ -150,9 +150,11 @@ async function carregarHistorico() {
               ${isCooldown ? "COOLDOWN" : (sinal.resultado === "WIN" ? "✅ WIN" : sinal.resultado === "LOSS" ? "❌ LOSS" : "⏳ PENDENTE")}
             </span>
           </div>
+          ${sinal.loteUtilizado ? `
           <div style="margin-top:4px; font-size:12px; color:#00ff88; font-weight:bold;">
-            💳 Lote: <b>${sinal.loteUtilizado || '0.04'}</b>
+            💳 Lote: <b>${sinal.loteUtilizado}</b>
           </div>
+          ` : ''}
           <div style="margin-top:4px; font-size:12px; color:#8c95b3;">
             ${dataSinal} &nbsp; 
             ${dataObj ? dataObj.toLocaleTimeString("pt-BR", { timeZone: "America/Sao_Paulo" }).substring(0, 5) : "--:--"}
@@ -173,12 +175,12 @@ async function carregarHistorico() {
               <div>💰 Entrada: <b>${sinal.precoEntrada || '-'}</b></div>
               <div>🏁 Saída: <b>${sinal.precoFechamento || '-'}</b></div>
             </div>
-            ${sinal.movimentoPips !== undefined ? `
+            ${sinal.movimentoPips !== undefined && sinal.loteUtilizado ? `
               <div style="margin-top:10px; padding:8px; border-radius:4px; background:rgba(255,255,255,0.05); text-align:center; font-weight:bold;">
                 <div style="color:${sinal.resultado === 'WIN' ? '#00ff88' : (sinal.resultado === 'LOSS' ? '#ff4444' : '#8c95b3')};">
                   VARIAÇÃO: ${sinal.movimentoPips > 0 ? '+' : ''}${sinal.movimentoPips} PIPS
                 </div>
-                ${sinal.lucroEstimado !== undefined ? `
+                ${sinal.lucroEstimado !== undefined && sinal.loteUtilizado ? `
                   <div style="margin-top:5px; font-size:14px; color:${sinal.lucroEstimado >= 0 ? '#00ff88' : '#ff4444'};">
                     RESULTADO: ${sinal.lucroEstimado >= 0 ? '+' : ''}$${sinal.lucroEstimado.toFixed(2)}
                   </div>
