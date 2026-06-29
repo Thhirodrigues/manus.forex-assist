@@ -27,8 +27,10 @@ jobs:
           npm install firebase-admin@11.11.1 axios
 
       - name: Create Firebase Key
+        env:
+          FIREBASE_DATA: ${{ secrets.FIREBASE_SERVICE_ACCOUNT }}
         run: |
-          echo '${{ secrets.FIREBASE_SERVICE_ACCOUNT }}' > serviceAccount.json
+          echo "$FIREBASE_DATA" > serviceAccount.json
 
       - name: Run Result Checker
         env:
