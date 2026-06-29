@@ -161,7 +161,7 @@ async function carregarHistorico() {
             ${!isCooldown ? ` | Qualidade: ${sinal.qualidade ?? "-"}%` : ""}
           </div>
           ${sinal.movimentoPips !== undefined ? `
-            <div style="margin-top:6px; font-size:12px; color:${sinal.resultado === 'WIN' ? '#00ff88' : '#ff4444'}; font-weight:bold;">
+            <div style="margin-top:6px; font-size:12px; color:${sinal.resultado === 'WIN' ? '#00ff88' : (sinal.resultado === 'LOSS' ? '#ff4444' : '#8c95b3')}; font-weight:bold;">
               📊 Movimentação: ${sinal.movimentoPips > 0 ? '+' : ''}${sinal.movimentoPips} pips
             </div>
           ` : ''}
@@ -173,18 +173,22 @@ async function carregarHistorico() {
               <div>📊 EMA 21: <b>${sinal.ema21 ? Number(sinal.ema21).toFixed(5) : '-'}</b></div>
               <div>🏠 EMA 200: <b>${sinal.ema200 ? Number(sinal.ema200).toFixed(5) : '-'}</b></div>
               <div>💰 Entrada: <b>${sinal.precoEntrada || '-'}</b></div>
-              <div>🏁 Saída: <b>${sinal.precoFechamento || '-'}</b></div>
+              <div>🏁 Saída: <b>${sinal.precoFechamento || 'Em andamento...'}</b></div>
             </div>
-            ${sinal.movimentoPips !== undefined && sinal.loteUtilizado ? `
+            ${sinal.movimentoPips !== undefined ? `
               <div style="margin-top:10px; padding:8px; border-radius:4px; background:rgba(255,255,255,0.05); text-align:center; font-weight:bold;">
                 <div style="color:${sinal.resultado === 'WIN' ? '#00ff88' : (sinal.resultado === 'LOSS' ? '#ff4444' : '#8c95b3')};">
                   VARIAÇÃO: ${sinal.movimentoPips > 0 ? '+' : ''}${sinal.movimentoPips} PIPS
                 </div>
-                ${sinal.lucroEstimado !== undefined && sinal.loteUtilizado ? `
+                ${sinal.lucroEstimado !== undefined ? `
                   <div style="margin-top:5px; font-size:14px; color:${sinal.lucroEstimado >= 0 ? '#00ff88' : '#ff4444'};">
                     RESULTADO: ${sinal.lucroEstimado >= 0 ? '+' : ''}$${sinal.lucroEstimado.toFixed(2)}
                   </div>
-                ` : ''}
+                ` : (sinal.resultado === 'PENDENTE' && sinal.loteUtilizado ? `
+                  <div style="margin-top:5px; font-size:14px; color:#8c95b3;">
+                    EVOLUÇÃO: ${(sinal.movimentoPips * (sinal.direcao === "SELL" || sinal.direcao === "PUT" ? -1 : 1) * 0.40).toFixed(2)} USD
+                  </div>
+                ` : '')}
               </div>
             ` : ''}
           </div>
@@ -226,10 +230,7 @@ async function carregarHistorico() {
       const isHoje = data === hojeStr;
       const label = isHoje ? `HOJE (${data})` : data;
 
-      // Verificar se há sinal destacado neste grupo
       const temSinalDestacado = app.sinalParaDestacar && gruposPorData[data].includes(`id="sinal-${app.sinalParaDestacar}"`);
-      
-      // Mostrar grupo se: é hoje, tem sinal destacado, ou está na lista de grupos abertos
       const mostrarGrupo = isHoje || temSinalDestacado || gruposAbertos.includes(idData);
 
       finalHtml += `

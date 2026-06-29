@@ -75,6 +75,8 @@ await salvarOperacao(db, {
             closes.length - 1
         ],
 
+    loteUtilizado: 0.04,
+
     resultado: "PENDENTE"
 
 });
