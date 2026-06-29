@@ -28,9 +28,9 @@ jobs:
 
       - name: Create Firebase Key
         env:
-          FIREBASE_DATA: ${{ secrets.FIREBASE_SERVICE_ACCOUNT }}
+          FIREBASE_DATA_BASE64: ${{ secrets.FIREBASE_SERVICE_ACCOUNT }}
         run: |
-          echo "$FIREBASE_DATA" > serviceAccount.json
+          echo "$FIREBASE_DATA_BASE64" | base64 --decode > serviceAccount.json
 
       - name: Run Result Checker
         env:
