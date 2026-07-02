@@ -27,10 +27,9 @@ jobs:
           npm install firebase-admin@11.11.1 axios
 
       - name: Create Firebase Key
-        env:
-          FIREBASE_DATA_BASE64: ${{ secrets.FIREBASE_SERVICE_ACCOUNT }}
         run: |
-          echo "$FIREBASE_DATA_BASE64" | base64 --decode > serviceAccount.json
+          echo "${{ secrets.FIREBASE_SERVICE_ACCOUNT }}" | base64 --decode > serviceAccount.json
+          if [ ! -s serviceAccount.json ]; then echo "Erro: serviceAccount.json está vazio" && exit 1; fi
 
       - name: Run Result Checker
         env:
